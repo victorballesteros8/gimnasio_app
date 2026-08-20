@@ -2,26 +2,38 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090b0f">
 <title>Gimnasio — Planificador de hipertrofia</title>
-  <style>
+
+<style>
 :root{
   --bg:#090b0f;
-  --bg-soft:#0f1218;
+  --bg2:#0d1015;
   --card:#151922;
-  --card-2:#1b202b;
-  --card-hover:#202633;
-  --text:#f5f7fa;
-  --muted:#8d96a6;
-  --muted-2:#687180;
-  --line:#252b36;
-  --accent:#b7f34a;
-  --accent-dark:#8fc52b;
-  --accent-soft:rgba(183,243,74,.11);
-  --danger:#ff6b6b;
+  --card2:#1b2029;
+  --card3:#202633;
+  --text:#f7f8fa;
+  --muted:#8f98a8;
+  --muted2:#687281;
+  --line:#272d38;
+
+  --accent:#b8f34b;
+  --accent2:#8fd32c;
+  --accent-soft:rgba(184,243,75,.10);
+  --accent-border:rgba(184,243,75,.22);
+
   --warning:#f4c95d;
-  --shadow:0 10px 30px rgba(0,0,0,.28);
-  --shadow-small:0 4px 14px rgba(0,0,0,.22);
+  --warning-soft:rgba(244,201,93,.08);
+
+  --danger:#ff6b6b;
+  --danger-soft:rgba(255,107,107,.07);
+
+  --radius:20px;
+  --radius-small:14px;
+
+  --shadow:0 12px 32px rgba(0,0,0,.28);
+  --shadow-small:0 5px 16px rgba(0,0,0,.22);
 }
 
 *{
@@ -30,20 +42,28 @@
 }
 
 html{
-  scroll-behavior:smooth;
+  min-height:100%;
   background:var(--bg);
+  scroll-behavior:smooth;
 }
 
 body{
-  margin:0;
   min-height:100vh;
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  margin:0;
+  padding:0 0 calc(95px + env(safe-area-inset-bottom));
   background:
-    radial-gradient(circle at 50% -10%,rgba(183,243,74,.08),transparent 32%),
-    var(--bg);
+    radial-gradient(circle at 50% -15%, rgba(184,243,75,.10), transparent 30%),
+    linear-gradient(180deg,#090b0f 0%,#0b0e13 45%,#090b0f 100%);
   color:var(--text);
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
   -webkit-font-smoothing:antialiased;
-  padding-bottom:88px;
 }
 
 button,
@@ -56,31 +76,53 @@ button{
   touch-action:manipulation;
 }
 
+.hidden{
+  display:none !important;
+}
+
+/* =========================
+   HEADER
+   ========================= */
+
 header{
+  position:relative;
+  overflow:hidden;
+  padding:
+    calc(27px + env(safe-area-inset-top))
+    18px
+    24px;
   background:
-    linear-gradient(180deg,rgba(183,243,74,.07),transparent 100%),
-    var(--bg);
-  color:#fff;
-  padding:28px 18px 22px;
-  border-bottom:1px solid var(--line);
+    radial-gradient(circle at 90% 10%,rgba(184,243,75,.13),transparent 28%),
+    linear-gradient(180deg,#11151c 0%,#090b0f 100%);
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+
+header::before{
+  content:"";
+  position:absolute;
+  width:180px;
+  height:180px;
+  right:-90px;
+  top:-100px;
+  border-radius:50%;
+  background:rgba(184,243,75,.06);
+  filter:blur(20px);
 }
 
 header .wrap,
 main{
+  width:100%;
   max-width:900px;
-  margin:auto;
+  margin:0 auto;
+  position:relative;
 }
 
 header h1{
   margin:0;
   font-size:27px;
-  line-height:1.15;
-  font-weight:850;
-  letter-spacing:-.7px;
-}
-
-header h1::first-line{
-  color:#fff;
+  line-height:1.12;
+  font-weight:900;
+  letter-spacing:-.8px;
 }
 
 header p{
@@ -90,81 +132,150 @@ header p{
   font-weight:500;
 }
 
+/* =========================
+   NAVEGACIÓN
+   ========================= */
+
 nav{
   position:fixed;
+  z-index:100;
   left:10px;
   right:10px;
-  bottom:10px;
-  top:auto;
-  z-index:100;
-  max-width:none;
+  bottom:calc(9px + env(safe-area-inset-bottom));
+  width:auto;
+  max-width:900px;
+  margin:auto;
+
+  display:flex;
+  gap:5px;
   padding:7px;
-  gap:4px;
-  border:1px solid #292f3a;
-  border-radius:18px;
-  background:rgba(21,25,34,.94);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  box-shadow:0 12px 35px rgba(0,0,0,.45);
+
+  background:rgba(20,24,32,.94);
+  border:1px solid #2a303b;
+  border-radius:19px;
+
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+
+  box-shadow:
+    0 15px 35px rgba(0,0,0,.45),
+    0 2px 7px rgba(0,0,0,.25);
 }
 
 nav button{
+  position:relative;
+  flex:1;
   min-width:0;
-  padding:11px 7px;
+  min-height:52px;
+
+  background:transparent;
+  border:1px solid transparent;
+  border-radius:14px;
+
+  color:var(--muted);
   font-size:11px;
-  border-radius:12px;
+  font-weight:800;
+
+  cursor:pointer;
+  transition:
+    background .18s ease,
+    color .18s ease,
+    transform .12s ease;
+}
+
+nav button::before{
+  display:block;
+  font-size:17px;
+  line-height:17px;
+  margin-bottom:3px;
+}
+
+#tabPlan::before{
+  content:"◈";
+}
+
+#tabRepo::before{
+  content:"▦";
+}
+
+#tabInfo::before{
+  content:"ⓘ";
 }
 
 nav button.active{
-  background:var(--accent-soft);
   color:var(--accent);
-  border-color:transparent;
+  background:var(--accent-soft);
+  border-color:var(--accent-border);
 }
 
-nav button.active::after{
-  display:none;
+nav button:active{
+  transform:scale(.96);
 }
-    
+
+/* =========================
+   MAIN
+   ========================= */
+
 main{
-  padding:8px 14px 28px;
+  padding:8px 12px 28px;
 }
+
+/* =========================
+   PANELES
+   ========================= */
 
 .panel{
   position:relative;
+  overflow:hidden;
+
+  margin:13px 0;
+  padding:18px;
+
   background:
-    linear-gradient(145deg,rgba(255,255,255,.025),transparent 60%),
+    linear-gradient(140deg,rgba(255,255,255,.025),transparent 55%),
     var(--card);
+
   border:1px solid var(--line);
-  border-radius:20px;
-  padding:19px;
-  margin:14px 0;
+  border-radius:var(--radius);
+
   box-shadow:var(--shadow);
 }
 
-.panel::before{
+.panel::after{
   content:"";
   position:absolute;
-  inset:0;
-  border-radius:20px;
   pointer-events:none;
-  background:linear-gradient(
-    135deg,
-    rgba(255,255,255,.025),
-    transparent 35%
-  );
+  inset:0;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.035),
+      transparent 30%
+    );
 }
 
 .panel h2{
   position:relative;
+  z-index:1;
+
   margin:0 0 17px;
+
   font-size:20px;
-  font-weight:850;
-  letter-spacing:-.3px;
+  line-height:1.2;
+  font-weight:900;
+  letter-spacing:-.4px;
 }
 
 .panel p{
+  position:relative;
+  z-index:1;
   line-height:1.55;
 }
+
+/* =========================
+   GENERADOR
+   ========================= */
 
 .grid{
   display:grid;
@@ -174,115 +285,189 @@ main{
 
 .field{
   position:relative;
+  z-index:2;
 }
 
 .field label{
   display:block;
-  font-size:11px;
-  color:var(--muted);
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:.5px;
+
   margin:0 0 7px 2px;
+
+  color:var(--muted);
+  font-size:10px;
+  font-weight:850;
+
+  text-transform:uppercase;
+  letter-spacing:.7px;
 }
 
 .field select,
 .field input{
   width:100%;
-  min-height:48px;
-  padding:12px 13px;
+  min-height:49px;
+
+  padding:12px 14px;
+
   color:var(--text);
-  background:var(--bg-soft);
+  background:var(--bg2);
+
   border:1px solid var(--line);
   border-radius:13px;
-  font-size:15px;
+
   outline:none;
-  appearance:none;
-  transition:.18s ease;
+  font-size:15px;
+
+  transition:
+    border-color .18s ease,
+    box-shadow .18s ease;
 }
 
 .field select{
+  appearance:none;
+
+  padding-right:38px;
+
   background-image:
-    linear-gradient(45deg,transparent 50%,var(--muted) 50%),
-    linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+    linear-gradient(45deg,transparent 50%,#7f8997 50%),
+    linear-gradient(135deg,#7f8997 50%,transparent 50%);
+
   background-position:
     calc(100% - 18px) 21px,
     calc(100% - 13px) 21px;
-  background-size:5px 5px,5px 5px;
+
+  background-size:5px 5px;
   background-repeat:no-repeat;
-  padding-right:35px;
 }
 
 .field select:focus,
 .field input:focus{
-  border-color:rgba(183,243,74,.6);
-  box-shadow:0 0 0 3px rgba(183,243,74,.08);
+  border-color:rgba(184,243,75,.55);
+  box-shadow:0 0 0 3px rgba(184,243,75,.07);
+}
+
+.actions{
+  position:relative;
+  z-index:2;
+
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+
+  margin-top:15px;
 }
 
 .primary{
-  width:auto;
-  min-height:48px;
-  background:var(--accent);
+  min-height:49px;
+
+  padding:12px 19px;
+
   color:#0b0d0f;
+  background:var(--accent);
+
   border:0;
   border-radius:13px;
-  padding:12px 18px;
+
   font-weight:900;
-  letter-spacing:.1px;
   cursor:pointer;
+
   box-shadow:
-    0 7px 18px rgba(183,243,74,.15),
-    inset 0 1px 0 rgba(255,255,255,.35);
-  transition:.15s ease;
+    0 8px 20px rgba(184,243,75,.13),
+    inset 0 1px 0 rgba(255,255,255,.4);
+
+  transition:
+    transform .12s ease,
+    background .15s ease;
 }
 
 .primary:hover{
-  background:#c5fb5d;
+  background:#c7fb61;
 }
 
 .primary:active{
   transform:scale(.98);
-  box-shadow:0 4px 12px rgba(183,243,74,.12);
 }
 
 .secondary{
   min-height:43px;
-  background:var(--card-2);
-  color:#edf0f5;
+
+  padding:9px 13px;
+
+  color:#e9ecf1;
+  background:var(--card2);
+
   border:1px solid var(--line);
   border-radius:12px;
-  padding:9px 13px;
+
+  font-size:13px;
   font-weight:750;
+
   cursor:pointer;
-  transition:.15s ease;
+
+  transition:
+    background .15s ease,
+    transform .12s ease,
+    border-color .15s ease;
 }
 
 .secondary:hover{
-  background:var(--card-hover);
-  border-color:#303846;
+  background:var(--card3);
+  border-color:#333b49;
 }
 
 .secondary:active{
-  transform:scale(.98);
+  transform:scale(.97);
 }
 
 .danger{
   color:var(--danger);
-  border-color:rgba(255,107,107,.22);
-  background:rgba(255,107,107,.05);
+  background:var(--danger-soft);
+  border-color:rgba(255,107,107,.2);
 }
 
-.actions{
-  display:flex;
-  gap:9px;
-  flex-wrap:wrap;
-  margin-top:15px;
+/* =========================
+   AVISO
+   ========================= */
+
+.notice{
+  position:relative;
+  z-index:2;
+
+  margin-top:13px;
+  padding:12px 13px;
+
+  color:#d7c987;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(244,201,93,.09),
+      transparent
+    ),
+    var(--warning-soft);
+
+  border:1px solid rgba(244,201,93,.18);
+  border-radius:13px;
+
+  font-size:12px;
+  line-height:1.55;
 }
+
+.notice b{
+  color:var(--warning);
+}
+
+/* =========================
+   RESUMEN
+   ========================= */
 
 .summary{
+  position:relative;
+  z-index:1;
+
   display:flex;
-  gap:7px;
   flex-wrap:wrap;
+  gap:7px;
+
   margin-bottom:17px;
 }
 
@@ -290,172 +475,192 @@ main{
   display:inline-flex;
   align-items:center;
   min-height:28px;
-  background:var(--accent-soft);
-  color:var(--accent);
-  border:1px solid rgba(183,243,74,.12);
+
   padding:6px 10px;
+
+  color:var(--accent);
+  background:var(--accent-soft);
+
+  border:1px solid var(--accent-border);
   border-radius:999px;
+
   font-size:11px;
   font-weight:850;
-  letter-spacing:.15px;
 }
+
+/* =========================
+   EJERCICIOS
+   ========================= */
 
 .exercise{
   position:relative;
   overflow:hidden;
-  background:
-    linear-gradient(145deg,rgba(255,255,255,.025),transparent 65%),
-    var(--card-2);
-  border:1px solid var(--line);
-  border-radius:17px;
-  padding:16px;
-  margin:11px 0;
-  box-shadow:var(--shadow-small);
-  transition:border-color .18s ease,transform .18s ease;
-}
 
-.exercise:hover{
-  border-color:#303846;
+  margin:11px 0;
+  padding:17px 16px;
+
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.025),transparent 60%),
+    var(--card2);
+
+  border:1px solid var(--line);
+  border-radius:18px;
+
+  box-shadow:var(--shadow-small);
+
+  transition:border-color .18s ease;
 }
 
 .exercise::before{
   content:"";
+
   position:absolute;
-  left:0;
   top:0;
   bottom:0;
+  left:0;
+
   width:3px;
+
   background:var(--accent);
-  opacity:.7;
+  opacity:.8;
 }
 
 .ex-head{
+  position:relative;
+  z-index:1;
+
   display:flex;
+  align-items:flex-start;
   justify-content:space-between;
   gap:12px;
-  align-items:flex-start;
-  position:relative;
 }
 
 .ex-name{
   font-size:17px;
   line-height:1.3;
-  font-weight:850;
-  letter-spacing:-.2px;
+  font-weight:900;
+  letter-spacing:-.25px;
 }
 
 .ex-meta{
+  margin-top:4px;
+
   color:var(--muted);
   font-size:11px;
-  margin-top:4px;
-  font-weight:600;
+  font-weight:650;
 }
 
 .sets{
-  font-size:17px;
-  line-height:1.4;
-  font-weight:900;
+  position:relative;
+  z-index:1;
+
+  margin:15px 0 6px;
+
   color:var(--accent);
-  margin:15px 0 7px;
+
+  font-size:17px;
+  line-height:1.45;
+  font-weight:900;
   letter-spacing:-.2px;
 }
 
 .rest{
-  font-size:12px;
+  position:relative;
+  z-index:1;
+
   color:var(--muted);
+  font-size:12px;
   font-weight:650;
 }
 
 .cue{
+  position:relative;
+  z-index:1;
+
+  margin-top:10px;
+
+  color:#aeb5c0;
   font-size:12px;
   line-height:1.55;
-  margin-top:10px;
-  color:#aeb5c1;
 }
 
 .hint{
+  position:relative;
+  z-index:1;
+
   color:var(--muted);
   font-size:12px;
-  line-height:1.5;
+  line-height:1.55;
 }
 
 .swap{
   margin-top:10px;
 }
 
-.notice{
-  position:relative;
-  background:
-    linear-gradient(135deg,rgba(244,201,93,.08),transparent),
-    rgba(244,201,93,.05);
-  border:1px solid rgba(244,201,93,.18);
-  color:#d8c786;
-  padding:12px 13px;
-  border-radius:13px;
-  font-size:12px;
-  line-height:1.55;
-  margin-top:12px;
-}
-
-.notice b{
-  color:var(--warning);
-}
+/* =========================
+   REPOSITORIO
+   ========================= */
 
 .repo-row{
   display:grid;
   grid-template-columns:1.5fr 1fr .8fr .8fr 1.4fr auto;
   gap:8px;
   align-items:center;
-  border-top:1px solid var(--line);
+
   padding:11px 0;
+
+  border-top:1px solid var(--line);
 }
 
 .repo-row input,
 .repo-row select{
   width:100%;
   min-height:40px;
+
   padding:8px 9px;
+
+  color:var(--text);
+  background:var(--bg2);
+
   border:1px solid var(--line);
   border-radius:9px;
-  background:var(--bg-soft);
-  color:var(--text);
+
   outline:none;
+  font-size:13px;
 }
 
 .repo-row input:focus,
 .repo-row select:focus{
-  border-color:rgba(183,243,74,.55);
-  box-shadow:0 0 0 3px rgba(183,243,74,.06);
+  border-color:rgba(184,243,75,.55);
+  box-shadow:0 0 0 3px rgba(184,243,75,.06);
 }
 
 .repo-head{
-  font-size:10px;
   color:var(--muted);
+  font-size:10px;
   font-weight:850;
   text-transform:uppercase;
   letter-spacing:.5px;
 }
 
-.empty{
-  padding:18px;
-  text-align:center;
-  color:var(--muted);
-}
-
-.hidden{
-  display:none;
-}
+/* =========================
+   INFO
+   ========================= */
 
 ul{
-  padding-left:20px;
+  position:relative;
+  z-index:1;
+
   margin:0;
+  padding-left:20px;
 }
 
 li{
-  color:#c3c8d1;
+  margin-bottom:10px;
+
+  color:#c1c7d0;
   font-size:13px;
   line-height:1.6;
-  margin-bottom:10px;
 }
 
 li::marker{
@@ -468,12 +673,11 @@ li::marker{
 
 @media(max-width:760px){
 
-  body{
-    padding-bottom:84px;
-  }
-
   header{
-    padding:25px 16px 20px;
+    padding:
+      calc(24px + env(safe-area-inset-top))
+      16px
+      20px;
   }
 
   header h1{
@@ -484,25 +688,13 @@ li::marker{
     font-size:12px;
   }
 
-  nav{
-    top:0;
-    padding:8px 10px;
-    gap:5px;
-    border-bottom:1px solid rgba(37,43,54,.9);
-  }
-
-  nav button{
-    min-width:0;
-    padding:10px 8px;
-    font-size:12px;
-  }
-
-  nav button.active::after{
-    bottom:-9px;
-  }
-
   main{
-    padding:3px 9px 25px;
+    padding:4px 9px 30px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+    gap:11px;
   }
 
   .panel{
@@ -515,14 +707,9 @@ li::marker{
     font-size:19px;
   }
 
-  .grid{
-    grid-template-columns:1fr;
-    gap:11px;
-  }
-
   .field select,
   .field input{
-    min-height:50px;
+    min-height:51px;
     font-size:16px;
   }
 
@@ -538,15 +725,16 @@ li::marker{
   }
 
   .actions label.secondary{
-    min-height:45px;
     display:flex;
     justify-content:center;
     align-items:center;
+    min-height:45px;
   }
 
   .exercise{
-    padding:15px;
+    padding:16px 15px;
     margin:10px 0;
+    border-radius:17px;
   }
 
   .ex-name{
@@ -558,8 +746,8 @@ li::marker{
   }
 
   .exercise .secondary{
-    min-height:39px;
-    padding:7px 10px;
+    min-height:40px;
+    padding:8px 10px;
     font-size:11px;
     white-space:nowrap;
   }
@@ -585,24 +773,26 @@ li::marker{
 
   .repo-row input,
   .repo-row select{
-    min-height:42px;
+    min-height:43px;
     font-size:14px;
   }
 }
 
+/* =========================
+   MÓVILES PEQUEÑOS
+   ========================= */
+
 @media(max-width:420px){
 
   header{
-    padding:22px 14px 18px;
+    padding:
+      calc(21px + env(safe-area-inset-top))
+      14px
+      18px;
   }
 
   header h1{
     font-size:22px;
-  }
-
-  nav button{
-    font-size:11px;
-    padding:10px 6px;
   }
 
   main{
@@ -626,144 +816,1199 @@ li::marker{
     line-height:1.5;
   }
 }
+
+/* =========================
+   PANTALLAS GRANDES
+   ========================= */
+
+@media(min-width:761px){
+
+  body{
+    padding-bottom:30px;
+  }
+
+  nav{
+    position:sticky;
+    top:10px;
+    left:auto;
+    right:auto;
+    bottom:auto;
+
+    margin:12px auto;
+
+    width:calc(100% - 28px);
+  }
+
+  nav button::before{
+    display:none;
+  }
+
+  main{
+    padding-bottom:50px;
+  }
+}
 </style>
 </head>
+
 <body>
-<header><div class="wrap"><h1>Gimnasio — Planificador</h1><p>Establece tu rutina para hoy.</p></div></header>
+
+<header>
+  <div class="wrap">
+    <h1>Gimnasio — Planificador</h1>
+    <p>Establece tu rutina para hoy.</p>
+  </div>
+</header>
+
 <nav>
-<button id="tabPlan" class="active" onclick="showTab('plan')">Planificar</button>
-<button id="tabRepo" onclick="showTab('repo')">Repositorio</button>
-<button id="tabInfo" onclick="showTab('info')">Criterios</button>
+  <button id="tabPlan" class="active" onclick="showTab('plan')">Planificar</button>
+  <button id="tabRepo" onclick="showTab('repo')">Repositorio</button>
+  <button id="tabInfo" onclick="showTab('info')">Criterios</button>
 </nav>
+
 <main>
+
 <section id="plan">
-<div class="panel">
-<h2>Generar entrenamiento</h2>
-<div class="grid">
-<div class="field"><label>Tipo de entrenamiento</label><select id="type"><option>Piernas</option><option>Pecho / Tríceps</option><option>Espalda / Bíceps</option><option>Hombros / Core</option><option>Fullbody</option></select></div>
-<div class="field"><label>Duración</label><select id="duration"><option value="45">45 minutos</option><option value="60" selected>60 minutos</option><option value="75">75 minutos</option><option value="90">90 minutos</option></select></div>
-<div class="field"><label>Intensidad</label><select id="intensity"><option>Muy baja</option><option>Baja</option><option selected>Normal</option><option>Alta</option><option>Muy alta</option></select></div>
-</div>
-<div class="actions"><button class="primary" onclick="generate()">Generar entrenamiento</button></div>
-<div class="notice">Las cargas del repositorio representan tu carga de referencia a <b>RIR 2</b>. Si una carga cambia, actualízala allí antes de generar la siguiente sesión.</div>
-</div>
-<div id="output"></div>
+
+  <div class="panel">
+
+    <h2>Generar entrenamiento</h2>
+
+    <div class="grid">
+
+      <div class="field">
+        <label>Tipo de entrenamiento</label>
+        <select id="type">
+          <option>Piernas</option>
+          <option>Pecho / Tríceps</option>
+          <option>Espalda / Bíceps</option>
+          <option>Hombros / Core</option>
+          <option>Fullbody</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Duración</label>
+        <select id="duration">
+          <option value="45">45 minutos</option>
+          <option value="60" selected>60 minutos</option>
+          <option value="75">75 minutos</option>
+          <option value="90">90 minutos</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Intensidad</label>
+        <select id="intensity">
+          <option>Muy baja</option>
+          <option>Baja</option>
+          <option selected>Normal</option>
+          <option>Alta</option>
+          <option>Muy alta</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button class="primary" onclick="generate()">
+        Generar entrenamiento
+      </button>
+    </div>
+
+    <div class="notice">
+      Las cargas del repositorio representan tu carga de referencia a
+      <b>RIR 2</b>. Si una carga cambia, actualízala allí antes de generar
+      la siguiente sesión.
+    </div>
+
+  </div>
+
+  <div id="output"></div>
+
 </section>
+
+
 <section id="repo" class="hidden">
-<div class="panel"><h2>Repositorio de ejercicios</h2><p class="hint">Edita la carga que actualmente puedes mover con aproximadamente RIR 2. En ejercicios no calibrados deja “?” hasta probarlos. El incremento sirve para calcular las series pesadas y futuras propuestas.</p><div class="actions"><button class="primary" onclick="addExercise()">Añadir ejercicio</button><button class="secondary" onclick="resetRepo()">Restaurar valores iniciales</button><button class="secondary" onclick="exportRepo()">Exportar repositorio</button><label class="secondary" style="cursor:pointer">Importar<input id="importFile" type="file" accept="application/json" style="display:none" onchange="importRepo(event)"></label></div></div>
-<div class="panel"><div id="repoTable"></div></div>
+
+  <div class="panel">
+
+    <h2>Repositorio de ejercicios</h2>
+
+    <p class="hint">
+      Edita la carga que actualmente puedes mover con aproximadamente RIR 2.
+      En ejercicios no calibrados deja “?” hasta probarlos. El incremento
+      sirve para calcular las series pesadas y futuras propuestas.
+    </p>
+
+    <div class="actions">
+
+      <button class="primary" onclick="addExercise()">
+        Añadir ejercicio
+      </button>
+
+      <button class="secondary" onclick="resetRepo()">
+        Restaurar valores iniciales
+      </button>
+
+      <button class="secondary" onclick="exportRepo()">
+        Exportar repositorio
+      </button>
+
+      <label class="secondary" style="cursor:pointer">
+        Importar
+        <input
+          id="importFile"
+          type="file"
+          accept="application/json"
+          style="display:none"
+          onchange="importRepo(event)"
+        >
+      </label>
+
+    </div>
+
+  </div>
+
+  <div class="panel">
+    <div id="repoTable"></div>
+  </div>
+
 </section>
+
+
 <section id="info" class="hidden">
-<div class="panel"><h2>Criterios de programación</h2><ul><li>Objetivo principal: hipertrofia, con progresión de carga/repeticiones y sin convertir cada sesión en una prueba de fuerza.</li><li>RIR 2 es la referencia del repositorio; la sesión puede acercarse a RIR 1 en series pesadas de días altos.</li><li>Las series pesadas se reservan sobre todo para ejercicios compuestos principales. Los aislamientos no reciben automáticamente una subida de carga.</li><li>La duración modifica el número de ejercicios/series. La intensidad modifica volumen y proximidad al fallo.</li><li>Los ejercicios con carga “?” se muestran como no calibrados y no reciben una carga inventada.</li><li>Las alternativas son deliberadamente sencillas y de patrón/músculo semejante.</li></ul></div>
+
+  <div class="panel">
+
+    <h2>Criterios de programación</h2>
+
+    <ul>
+
+      <li>
+        Objetivo principal: hipertrofia, con progresión de
+        carga/repeticiones y sin convertir cada sesión en una prueba de fuerza.
+      </li>
+
+      <li>
+        RIR 2 es la referencia del repositorio; la sesión puede acercarse
+        a RIR 1 en series pesadas de días altos.
+      </li>
+
+      <li>
+        Las series pesadas se reservan sobre todo para ejercicios compuestos
+        principales. Los aislamientos no reciben automáticamente una subida
+        de carga.
+      </li>
+
+      <li>
+        La duración modifica el número de ejercicios/series.
+        La intensidad modifica volumen y proximidad al fallo.
+      </li>
+
+      <li>
+        Los ejercicios con carga “?” se muestran como no calibrados
+        y no reciben una carga inventada.
+      </li>
+
+      <li>
+        Las alternativas son deliberadamente sencillas y de patrón/músculo semejante.
+      </li>
+
+    </ul>
+
+  </div>
+
 </section>
+
 </main>
+
+
 <script>
+
 const initialRepo = [
+
 {name:'Prensa de piernas',group:'Piernas',type:'Compuesto',load:80,unit:'kg',inc:5,priority:3,cue:'Pies estables y rodillas siguiendo la línea de los pies; desciende con control sin perder la posición pélvica.',alts:['Sentadilla guiada en máquina','Sentadilla goblet']},
+
 {name:'Sentadilla guiada en máquina',group:'Piernas',type:'Compuesto',load:50,unit:'kg',inc:2.5,priority:3,cue:'Apoya toda la planta y desciende hasta un rango cómodo manteniendo el tronco estable.',alts:['Prensa de piernas','Sentadilla goblet']},
+
 {name:'Extensión de cuádriceps',group:'Piernas',type:'Aislamiento',load:40,unit:'kg',inc:5,priority:2,cue:'Ajusta el eje a la rodilla y extiende sin despegar la cadera del asiento.',alts:['Sentadilla española']},
+
 {name:'Curl femoral sentado',group:'Piernas',type:'Aislamiento',load:36,unit:'kg',inc:5,priority:2,cue:'Mantén la cadera pegada al respaldo y lleva los talones hacia abajo sin rebote.',alts:['Curl femoral tumbado','Peso muerto rumano']},
+
 {name:'Peso muerto rumano',group:'Piernas',type:'Compuesto',load:60,unit:'kg',inc:2.5,priority:3,cue:'Rodillas ligeramente flexionadas, cadera atrás y barra próxima a los muslos durante todo el recorrido.',alts:['Curl femoral sentado','Hip thrust']},
+
 {name:'Elevación de gemelo sentado',group:'Piernas',type:'Aislamiento',load:30,unit:'kg',inc:5,priority:1,cue:'Baja el talón con control y busca una contracción completa sin rebotar.',alts:['Gemelo de pie en máquina']},
+
 {name:'Hip thrust',group:'Piernas',type:'Compuesto',load:'?',unit:'kg',inc:5,priority:2,cue:'Barbilla ligeramente hacia el pecho y pelvis neutra; termina extendiendo la cadera sin hiperextender la espalda.',alts:['Peso muerto rumano']},
+
 {name:'Press banca',group:'Pecho',type:'Compuesto',load:50,unit:'kg',inc:2.5,priority:3,cue:'Pies firmes, escápulas retraídas y barra hacia la zona media-baja del pecho.',alts:['Press banca con mancuernas','Press de pecho en máquina']},
+
 {name:'Press banca inclinado',group:'Pecho',type:'Compuesto',load:40,unit:'kg',inc:2.5,priority:3,cue:'Banco moderadamente inclinado y hombros atrás; baja las manos hacia la parte alta del pecho.',alts:['Press inclinado con mancuernas','Press de pecho en máquina']},
+
 {name:'Aperturas con mancuernas tumbado',group:'Pecho',type:'Aislamiento',load:14,unit:'kg/mancuerna',inc:1,priority:2,cue:'Codos suavemente flexionados y recorrido amplio sin perder el control en la posición estirada.',alts:['Cruce de poleas','Pec deck']},
+
 {name:'Press de pecho en máquina',group:'Pecho',type:'Compuesto',load:'?',unit:'kg',inc:5,priority:2,cue:'Ajusta el asiento para que las asas queden a la altura media del pecho y empuja sin elevar hombros.',alts:['Press banca','Press banca inclinado']},
+
 {name:'Cruce de poleas',group:'Pecho',type:'Aislamiento',load:'?',unit:'kg',inc:2.5,priority:1,cue:'Mantén el tronco estable y aproxima los brazos al frente sin perder tensión pectoral.',alts:['Aperturas con mancuernas tumbado','Pec deck']},
+
 {name:'Extensión de tríceps en polea',group:'Tríceps',type:'Aislamiento',load:20,unit:'kg',inc:2.5,priority:2,cue:'Codos pegados al cuerpo y hombros quietos; extiende hasta bloquear cómodamente el codo.',alts:['Extensión de tríceps con cuerda','Fondos de tríceps']},
+
 {name:'Extensión de tríceps en polea baja unilateral',group:'Tríceps',type:'Aislamiento',load:5,unit:'kg/mano',inc:1,priority:1,cue:'Codo estable y brazo alineado con el tronco; mueve solo el antebrazo.',alts:['Extensión de tríceps en polea']},
+
 {name:'Fondos de tríceps',group:'Tríceps',type:'Compuesto',load:'?',unit:'peso corporal',inc:2.5,priority:2,cue:'Tronco relativamente vertical y codos controlados; añade lastre solo cuando el peso corporal sea cómodo.',alts:['Extensión de tríceps en polea','Press cerrado']},
+
 {name:'Press cerrado',group:'Tríceps',type:'Compuesto',load:'?',unit:'kg',inc:2.5,priority:2,cue:'Agarre ligeramente más cerrado que el press convencional y codos bajo control durante la bajada.',alts:['Fondos de tríceps','Extensión de tríceps en polea']},
+
 {name:'Jalón en máquina',group:'Espalda',type:'Compuesto',load:100,unit:'kg',inc:5,priority:3,cue:'Inicia el movimiento deprimiendo las escápulas y lleva el agarre hacia la parte alta del pecho sin balancearte.',alts:['Jalón unilateral en polea','Dominadas asistidas']},
+
 {name:'Dominadas',group:'Espalda',type:'Compuesto',load:'?',unit:'peso corporal/lastre',inc:2.5,priority:3,cue:'Inicia con escápulas activas y lleva el pecho hacia la barra manteniendo el tronco estable.',alts:['Jalón en máquina','Dominadas asistidas']},
+
 {name:'Remo con mancuerna en banco',group:'Espalda',type:'Compuesto',load:16,unit:'kg/mancuerna',inc:2,priority:3,cue:'Espalda neutra y hombro lejos de la oreja; lleva el codo hacia la cadera.',alts:['Remo sentado en polea','Remo con pecho apoyado']},
+
 {name:'Remo sentado en polea',group:'Espalda',type:'Compuesto',load:'?',unit:'kg',inc:5,priority:2,cue:'Mantén el tronco estable y lleva los codos atrás sin convertirlo en un balanceo.',alts:['Remo con mancuerna en banco','Remo con pecho apoyado']},
+
 {name:'Remo con pecho apoyado',group:'Espalda',type:'Compuesto',load:'?',unit:'kg',inc:5,priority:2,cue:'Pecho apoyado y hombros estables; tira con los codos y evita encogerlos hacia las orejas.',alts:['Remo sentado en polea','Remo con mancuerna en banco']},
+
 {name:'Curl martillo',group:'Bíceps',type:'Aislamiento',load:16,unit:'kg/mancuerna',inc:1,priority:2,cue:'Muñeca neutra y codos junto al cuerpo; evita adelantar el hombro al subir.',alts:['Curl martillo en polea baja','Curl inclinado con mancuernas']},
+
 {name:'Curl martillo en polea baja',group:'Bíceps',type:'Aislamiento',load:'?',unit:'kg',inc:2.5,priority:1,cue:'Mantén el codo estable y la muñeca neutra durante todo el recorrido.',alts:['Curl martillo','Curl unilateral en polea']},
+
 {name:'Curl concentrado',group:'Bíceps',type:'Aislamiento',load:14,unit:'kg/mancuerna',inc:1,priority:1,cue:'Apoya el brazo en el muslo y evita que el hombro avance al completar la flexión.',alts:['Curl predicador','Curl unilateral en polea']},
+
 {name:'Curl barra EZ',group:'Bíceps',type:'Aislamiento',load:20,unit:'kg + barra',inc:2.5,priority:2,cue:'Codos bajo el hombro y torso quieto; sube sin convertir el movimiento en un balanceo.',alts:['Curl predicador','Curl con mancuernas']},
+
 {name:'Curl predicador',group:'Bíceps',type:'Aislamiento',load:'?',unit:'kg',inc:2.5,priority:1,cue:'Mantén el brazo apoyado y no rebotes al llegar a la extensión.',alts:['Curl concentrado','Curl barra EZ']},
+
 {name:'Press militar de pie',group:'Hombros',type:'Compuesto',load:30,unit:'kg',inc:2.5,priority:3,cue:'Glúteos y abdomen activos; barra cerca de la cara y cabeza atravesando la línea de brazos arriba.',alts:['Press de hombros en máquina','Press con mancuernas']},
+
 {name:'Press de hombros en máquina',group:'Hombros',type:'Compuesto',load:'?',unit:'kg',inc:5,priority:2,cue:'Espalda apoyada y muñecas neutras; empuja sin encoger los hombros al final.',alts:['Press militar de pie','Press con mancuernas']},
+
 {name:'Elevaciones laterales',group:'Hombros',type:'Aislamiento',load:5,unit:'kg/mancuerna',inc:1,priority:2,cue:'Codos ligeramente por encima de las manos y recorrido controlado hasta aproximadamente la altura del hombro.',alts:['Elevación lateral en polea','Máquina de elevaciones laterales']},
+
 {name:'Elevación lateral en polea',group:'Hombros',type:'Aislamiento',load:'?',unit:'kg',inc:1,priority:1,cue:'Mantén tensión continua y eleva el brazo lateralmente sin inclinar el tronco.',alts:['Elevaciones laterales','Máquina de elevaciones laterales']},
+
 {name:'Face pull',group:'Hombros',type:'Aislamiento',load:15,unit:'kg',inc:2.5,priority:1,cue:'Tira hacia la cara con codos altos y rota externamente manteniendo el tronco estable.',alts:['Pájaros en máquina','Pájaros con mancuernas']},
+
 {name:'Encogimiento de hombros con mancuerna',group:'Hombros',type:'Aislamiento',load:20,unit:'kg/mancuerna',inc:2,priority:1,cue:'Eleva los hombros verticalmente sin hacer círculos y pausa brevemente arriba.',alts:['Encogimiento en máquina']},
+
 {name:'Abdominales inclinados en banco',group:'Core',type:'Core',load:15,unit:'kg',inc:2.5,priority:2,cue:'Flexiona la columna de forma controlada sin tirar del cuello y vuelve sin rebote.',alts:['Crunch en polea']},
+
 {name:'Abdominales colgado en barra',group:'Core',type:'Core',load:'?',unit:'peso corporal',inc:2.5,priority:1,cue:'Inicia con retroversión pélvica y eleva las rodillas sin balancear el cuerpo.',alts:['Elevación de rodillas en máquina','Crunch en polea']},
+
 {name:'Crunch en polea',group:'Core',type:'Core',load:'?',unit:'kg',inc:2.5,priority:2,cue:'Flexiona el tronco acercando las costillas a la pelvis sin tirar de los brazos.',alts:['Abdominales inclinados en banco','Abdominales colgado en barra']}
+
 ];
 
-let repo = JSON.parse(localStorage.getItem('gymRepo')||'null') || structuredClone(initialRepo);
+
+let repo =
+  JSON.parse(localStorage.getItem('gymRepo') || 'null')
+  || structuredClone(initialRepo);
+
 let lastPlan=[];
+
+
 const intensityMap={
-'Muy baja':{sets:2,rir:3,heavy:false,exerciseFactor:.62},
-'Baja':{sets:3,rir:2,heavy:false,exerciseFactor:.78},
-'Normal':{sets:3,rir:2,heavy:false,exerciseFactor:1},
-'Alta':{sets:4,rir:1,heavy:true,exerciseFactor:1.15},
-'Muy alta':{sets:4,rir:1,heavy:true,exerciseFactor:1.3}
+  'Muy baja':{
+    sets:2,
+    rir:3,
+    heavy:false,
+    exerciseFactor:.62
+  },
+
+  'Baja':{
+    sets:3,
+    rir:2,
+    heavy:false,
+    exerciseFactor:.78
+  },
+
+  'Normal':{
+    sets:3,
+    rir:2,
+    heavy:false,
+    exerciseFactor:1
+  },
+
+  'Alta':{
+    sets:4,
+    rir:1,
+    heavy:true,
+    exerciseFactor:1.15
+  },
+
+  'Muy alta':{
+    sets:4,
+    rir:1,
+    heavy:true,
+    exerciseFactor:1.3
+  }
 };
-const durationMap={45:5,60:7,75:9,90:11};
+
+
+const durationMap={
+  45:5,
+  60:7,
+  75:9,
+  90:11
+};
+
+
 const splitGroups={
-'Piernas':['Piernas'],
-'Pecho / Tríceps':['Pecho','Tríceps'],
-'Espalda / Bíceps':['Espalda','Bíceps'],
-'Hombros / Core':['Hombros','Core']
+  'Piernas':['Piernas'],
+  'Pecho / Tríceps':['Pecho','Tríceps'],
+  'Espalda / Bíceps':['Espalda','Bíceps'],
+  'Hombros / Core':['Hombros','Core']
 };
-function save(){localStorage.setItem('gymRepo',JSON.stringify(repo));}
-function showTab(t){['plan','repo','info'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==t));['Plan','Repo','Info'].forEach(x=>document.getElementById('tab'+x).classList.toggle('active',x.toLowerCase()===t)); if(t==='repo')renderRepo();}
-function fmtLoad(x){return x==='?'?'?':(Number.isInteger(x)?x:x.toFixed(1));}
-function groupsFor(type){return type==='Fullbody'?['Piernas','Pecho','Espalda','Hombros','Bíceps','Tríceps','Core']:splitGroups[type];}
+
+
+function save(){
+  localStorage.setItem('gymRepo',JSON.stringify(repo));
+}
+
+
+function showTab(t){
+
+  ['plan','repo','info']
+    .forEach(x =>
+      document
+        .getElementById(x)
+        .classList
+        .toggle('hidden',x!==t)
+    );
+
+  ['Plan','Repo','Info']
+    .forEach(x =>
+      document
+        .getElementById('tab'+x)
+        .classList
+        .toggle('active',x.toLowerCase()===t)
+    );
+
+  if(t==='repo'){
+    renderRepo();
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:'smooth'
+  });
+}
+
+
+function fmtLoad(x){
+  return x==='?'
+    ? '?'
+    : (Number.isInteger(x)?x:x.toFixed(1));
+}
+
+
+function groupsFor(type){
+
+  return type==='Fullbody'
+    ? [
+        'Piernas',
+        'Pecho',
+        'Espalda',
+        'Hombros',
+        'Bíceps',
+        'Tríceps',
+        'Core'
+      ]
+    : splitGroups[type];
+
+}
+
+
 function chooseExercises(type,duration){
- const groups=groupsFor(type), target=durationMap[duration];
- let pool=[];
- groups.forEach(g=>{let arr=repo.filter(e=>e.group===g).sort((a,b)=>b.priority-a.priority); if(type==='Fullbody') arr=arr.slice(0,3); pool.push(...arr);});
- if(type==='Fullbody'){
-   const selected=[]; const wanted=['Piernas','Pecho','Espalda','Hombros','Core'];
-   wanted.forEach(g=>{const a=pool.filter(e=>e.group===g); if(a[0]) selected.push(a[0]);});
-   if(duration>=60){const extras=pool.filter(e=>!selected.includes(e)).sort((a,b)=>b.priority-a.priority); selected.push(...extras.slice(0,Math.max(1,target-selected.length)));}
-   return selected.slice(0,target);
- }
- // balance principal/aislamiento and cap core.
- let selected=[];
- groups.forEach(g=>{const a=pool.filter(e=>e.group===g); const n=type==='Piernas'?Math.ceil(target/groups.length):Math.max(2,Math.ceil(target/groups.length)); selected.push(...a.slice(0,n));});
- selected=selected.sort((a,b)=>b.priority-a.priority).slice(0,target);
- return selected;
+
+  const groups=groupsFor(type);
+  const target=durationMap[duration];
+
+  let pool=[];
+
+  groups.forEach(g=>{
+
+    let arr=repo
+      .filter(e=>e.group===g)
+      .sort((a,b)=>b.priority-a.priority);
+
+    if(type==='Fullbody'){
+      arr=arr.slice(0,3);
+    }
+
+    pool.push(...arr);
+
+  });
+
+
+  if(type==='Fullbody'){
+
+    const selected=[];
+
+    const wanted=[
+      'Piernas',
+      'Pecho',
+      'Espalda',
+      'Hombros',
+      'Core'
+    ];
+
+    wanted.forEach(g=>{
+
+      const a=pool.filter(e=>e.group===g);
+
+      if(a[0]){
+        selected.push(a[0]);
+      }
+
+    });
+
+
+    if(duration>=60){
+
+      const extras=
+        pool
+          .filter(e=>!selected.includes(e))
+          .sort((a,b)=>b.priority-a.priority);
+
+      selected.push(
+        ...extras.slice(
+          0,
+          Math.max(1,target-selected.length)
+        )
+      );
+
+    }
+
+    return selected.slice(0,target);
+
+  }
+
+
+  let selected=[];
+
+  groups.forEach(g=>{
+
+    const a=pool.filter(e=>e.group===g);
+
+    const n=
+      type==='Piernas'
+        ? Math.ceil(target/groups.length)
+        : Math.max(
+            2,
+            Math.ceil(target/groups.length)
+          );
+
+    selected.push(...a.slice(0,n));
+
+  });
+
+
+  selected=
+    selected
+      .sort((a,b)=>b.priority-a.priority)
+      .slice(0,target);
+
+  return selected;
+
 }
+
+
 function setPlanFor(e,intensity){
- const im=intensityMap[intensity], load=e.load;
- if(load==='?') return {text:`${im.sets} × 8–12 · ? · RIR ${im.rir}`, note:'Carga sin calibrar: usa una carga que te deje aproximadamente el RIR indicado y guárdala después en el repositorio.'};
- const isCompound=e.type==='Compuesto';
- if(im.heavy && isCompound && e.priority>=3){
-   const base=Math.max(1,im.sets-1); const reps=intensity==='Muy alta'?7:8; const heavyReps=intensity==='Muy alta'?5:6; const heavy=Number(load)+Number(e.inc);
-   return {text:`${base} × ${reps} · ${fmtLoad(load)} ${e.unit} · RIR 2  |  1 × ${heavyReps} · ${fmtLoad(heavy)} ${e.unit} · RIR 1`, note:'Serie pesada final: sube solo el incremento previsto y mantén la técnica del movimiento.'};
- }
- let reps= e.type==='Core'?12:(e.type==='Aislamiento'?10:8);
- if(intensity==='Muy baja') reps=e.type==='Core'?12:10;
- if(intensity==='Baja') reps=e.type==='Core'?12:10;
- if(intensity==='Muy alta' && e.type==='Aislamiento') reps=8;
- return {text:`${im.sets} × ${reps} · ${fmtLoad(load)} ${e.unit} · RIR ${im.rir}`, note:''};
+
+  const im=intensityMap[intensity];
+  const load=e.load;
+
+  if(load==='?'){
+
+    return {
+      text:
+        `${im.sets} × 8–12 · ? · RIR ${im.rir}`,
+
+      note:
+        'Carga sin calibrar: usa una carga que te deje aproximadamente el RIR indicado y guárdala después en el repositorio.'
+    };
+
+  }
+
+
+  const isCompound=e.type==='Compuesto';
+
+
+  if(
+    im.heavy &&
+    isCompound &&
+    e.priority>=3
+  ){
+
+    const base=
+      Math.max(
+        1,
+        im.sets-1
+      );
+
+    const reps=
+      intensity==='Muy alta'
+        ? 7
+        : 8;
+
+    const heavyReps=
+      intensity==='Muy alta'
+        ? 5
+        : 6;
+
+    const heavy=
+      Number(load)+Number(e.inc);
+
+
+    return {
+
+      text:
+        `${base} × ${reps} · ${fmtLoad(load)} ${e.unit} · RIR 2  |  1 × ${heavyReps} · ${fmtLoad(heavy)} ${e.unit} · RIR 1`,
+
+      note:
+        'Serie pesada final: sube solo el incremento previsto y mantén la técnica del movimiento.'
+
+    };
+
+  }
+
+
+  let reps=
+    e.type==='Core'
+      ? 12
+      : (e.type==='Aislamiento'
+          ? 10
+          : 8);
+
+
+  if(intensity==='Muy baja'){
+    reps=e.type==='Core'?12:10;
+  }
+
+  if(intensity==='Baja'){
+    reps=e.type==='Core'?12:10;
+  }
+
+  if(
+    intensity==='Muy alta' &&
+    e.type==='Aislamiento'
+  ){
+    reps=8;
+  }
+
+
+  return {
+
+    text:
+      `${im.sets} × ${reps} · ${fmtLoad(load)} ${e.unit} · RIR ${im.rir}`,
+
+    note:''
+  };
+
 }
+
+
 function generate(){
- const type=document.getElementById('type').value, duration=Number(document.getElementById('duration').value), intensity=document.getElementById('intensity').value;
- const exs=chooseExercises(type,duration); lastPlan=exs;
- const out=document.getElementById('output'); out.innerHTML=`<div class="panel"><div class="summary"><span class="pill">${type}</span><span class="pill">${duration} min</span><span class="pill">${intensity}</span></div><h2>Entrenamiento</h2>${exs.map((e,i)=>{const p=setPlanFor(e,intensity);return `<div class="exercise"><div class="ex-head"><div><div class="ex-name">${i+1}. ${e.name}</div><div class="ex-meta">${e.group} · ${e.type}</div></div><button class="secondary" onclick="swapExercise(${i})">↻ Ver otra opción</button></div><div class="sets">${p.text}</div><div class="rest">Descanso: ${restFor(e,intensity)}</div><div class="cue">${e.cue}</div>${p.note?`<div class="hint" style="margin-top:7px">${p.note}</div>`:''}</div>`}).join('')}</div>`;
+
+  const type=
+    document.getElementById('type').value;
+
+  const duration=
+    Number(
+      document.getElementById('duration').value
+    );
+
+  const intensity=
+    document.getElementById('intensity').value;
+
+
+  const exs=
+    chooseExercises(
+      type,
+      duration
+    );
+
+  lastPlan=exs;
+
+
+  const out=
+    document.getElementById('output');
+
+
+  out.innerHTML=`
+
+    <div class="panel">
+
+      <div class="summary">
+
+        <span class="pill">
+          ${type}
+        </span>
+
+        <span class="pill">
+          ${duration} min
+        </span>
+
+        <span class="pill">
+          ${intensity}
+        </span>
+
+      </div>
+
+      <h2>Entrenamiento</h2>
+
+      ${exs.map((e,i)=>{
+
+        const p=setPlanFor(
+          e,
+          intensity
+        );
+
+        return `
+
+          <div class="exercise">
+
+            <div class="ex-head">
+
+              <div>
+
+                <div class="ex-name">
+                  ${i+1}. ${e.name}
+                </div>
+
+                <div class="ex-meta">
+                  ${e.group} · ${e.type}
+                </div>
+
+              </div>
+
+              <button
+                class="secondary"
+                onclick="swapExercise(${i})"
+              >
+                ↻ Ver otra opción
+              </button>
+
+            </div>
+
+            <div class="sets">
+              ${p.text}
+            </div>
+
+            <div class="rest">
+              Descanso:
+              ${restFor(e,intensity)}
+            </div>
+
+            <div class="cue">
+              ${e.cue}
+            </div>
+
+            ${
+              p.note
+                ? `<div
+                    class="hint"
+                    style="margin-top:7px"
+                  >
+                    ${p.note}
+                  </div>`
+                : ''
+            }
+
+          </div>
+
+        `;
+
+      }).join('')}
+
+    </div>
+
+  `;
+
 }
-function restFor(e,intensity){if(e.type==='Compuesto')return intensity==='Muy alta'?'3:00–4:00 min':'2:00–3:00 min'; if(e.type==='Core')return '60–90 s'; return intensity==='Muy alta'?'90–120 s':'60–90 s';}
-function swapExercise(i){const old=lastPlan[i]; const candidates=repo.filter(e=>e.group===old.group && e.name!==old.name && (old.alts||[]).includes(e.name)); const pool=candidates.length?candidates:repo.filter(e=>e.group===old.group&&e.name!==old.name); if(!pool.length)return; const next=pool[Math.floor(Math.random()*pool.length)]; lastPlan[i]=next; renderLast();}
-function renderLast(){const type=document.getElementById('type').value,duration=Number(document.getElementById('duration').value),intensity=document.getElementById('intensity').value; const out=document.getElementById('output'); out.innerHTML=`<div class="panel"><div class="summary"><span class="pill">${type}</span><span class="pill">${duration} min</span><span class="pill">${intensity}</span></div><h2>Entrenamiento</h2>${lastPlan.map((e,i)=>{const p=setPlanFor(e,intensity);return `<div class="exercise"><div class="ex-head"><div><div class="ex-name">${i+1}. ${e.name}</div><div class="ex-meta">${e.group} · ${e.type}</div></div><button class="secondary" onclick="swapExercise(${i})">↻ Ver otra opción</button></div><div class="sets">${p.text}</div><div class="rest">Descanso: ${restFor(e,intensity)}</div><div class="cue">${e.cue}</div>${p.note?`<div class="hint" style="margin-top:7px">${p.note}</div>`:''}</div>`}).join('')}</div>`;}
-function renderRepo(){const el=document.getElementById('repoTable'); el.innerHTML=`<div class="repo-row repo-head"><div>Ejercicio</div><div>Carga RIR 2</div><div>Unidad</div><div>Incremento</div><div>Grupo / tipo</div><div></div></div>`+repo.map((e,i)=>`<div class="repo-row"><div class="wide"><input value="${esc(e.name)}" onchange="upd(${i},'name',this.value)"></div><div><input value="${e.load}" placeholder="?" onchange="updNum(${i},'load',this.value)"></div><div><input value="${esc(e.unit)}" onchange="upd(${i},'unit',this.value)"></div><div><input value="${e.inc}" onchange="updNum(${i},'inc',this.value)"></div><div><select onchange="upd(${i},'group',this.value)">${['Piernas','Pecho','Tríceps','Espalda','Bíceps','Hombros','Core'].map(g=>`<option ${e.group===g?'selected':''}>${g}</option>`).join('')}</select><select onchange="upd(${i},'type',this.value)"><option ${e.type==='Compuesto'?'selected':''}>Compuesto</option><option ${e.type==='Aislamiento'?'selected':''}>Aislamiento</option><option ${e.type==='Core'?'selected':''}>Core</option></select></div><button class="secondary danger" onclick="delExercise(${i})">Eliminar</button></div>`).join('');}
-function esc(s){return String(s??'').replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;');}
-function upd(i,k,v){repo[i][k]=v;save();}
-function updNum(i,k,v){repo[i][k]=v.trim()==='?'?'?':Number(v);save();}
-function addExercise(){repo.push({name:'Nuevo ejercicio',group:'Pecho',type:'Aislamiento',load:'?',unit:'kg',inc:2.5,priority:1,cue:'Añade aquí una indicación técnica breve y específica.',alts:[]});save();renderRepo();}
-function delExercise(i){if(confirm('¿Eliminar este ejercicio?')){repo.splice(i,1);save();renderRepo();}}
-function resetRepo(){if(confirm('¿Restaurar todas las cargas y ejercicios iniciales?')){repo=structuredClone(initialRepo);save();renderRepo();}}
-function exportRepo(){const blob=new Blob([JSON.stringify(repo,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='repositorio-gimnasio.json';a.click();URL.revokeObjectURL(a.href);}
-function importRepo(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{repo=JSON.parse(r.result);save();renderRepo();alert('Repositorio importado correctamente.')}catch(e){alert('Archivo no válido.')}};r.readAsText(f);}
+
+
+function restFor(e,intensity){
+
+  if(e.type==='Compuesto'){
+
+    return intensity==='Muy alta'
+      ? '3:00–4:00 min'
+      : '2:00–3:00 min';
+
+  }
+
+  if(e.type==='Core'){
+    return '60–90 s';
+  }
+
+  return intensity==='Muy alta'
+    ? '90–120 s'
+    : '60–90 s';
+
+}
+
+
+function swapExercise(i){
+
+  const old=lastPlan[i];
+
+  const candidates=
+    repo.filter(
+      e =>
+        e.group===old.group &&
+        e.name!==old.name &&
+        (old.alts||[]).includes(e.name)
+    );
+
+
+  const pool=
+    candidates.length
+      ? candidates
+      : repo.filter(
+          e =>
+            e.group===old.group &&
+            e.name!==old.name
+        );
+
+
+  if(!pool.length){
+    return;
+  }
+
+
+  const next=
+    pool[
+      Math.floor(
+        Math.random()*pool.length
+      )
+    ];
+
+
+  lastPlan[i]=next;
+
+  renderLast();
+
+}
+
+
+function renderLast(){
+
+  const type=
+    document.getElementById('type').value;
+
+  const duration=
+    Number(
+      document.getElementById('duration').value
+    );
+
+  const intensity=
+    document.getElementById('intensity').value;
+
+  const out=
+    document.getElementById('output');
+
+
+  out.innerHTML=`
+
+    <div class="panel">
+
+      <div class="summary">
+
+        <span class="pill">
+          ${type}
+        </span>
+
+        <span class="pill">
+          ${duration} min
+        </span>
+
+        <span class="pill">
+          ${intensity}
+        </span>
+
+      </div>
+
+      <h2>Entrenamiento</h2>
+
+      ${lastPlan.map((e,i)=>{
+
+        const p=
+          setPlanFor(
+            e,
+            intensity
+          );
+
+        return `
+
+          <div class="exercise">
+
+            <div class="ex-head">
+
+              <div>
+
+                <div class="ex-name">
+                  ${i+1}. ${e.name}
+                </div>
+
+                <div class="ex-meta">
+                  ${e.group} · ${e.type}
+                </div>
+
+              </div>
+
+              <button
+                class="secondary"
+                onclick="swapExercise(${i})"
+              >
+                ↻ Ver otra opción
+              </button>
+
+            </div>
+
+            <div class="sets">
+              ${p.text}
+            </div>
+
+            <div class="rest">
+              Descanso:
+              ${restFor(e,intensity)}
+            </div>
+
+            <div class="cue">
+              ${e.cue}
+            </div>
+
+            ${
+              p.note
+                ? `<div
+                    class="hint"
+                    style="margin-top:7px"
+                  >
+                    ${p.note}
+                  </div>`
+                : ''
+            }
+
+          </div>
+
+        `;
+
+      }).join('')}
+
+    </div>
+
+  `;
+
+}
+
+
+function renderRepo(){
+
+  const el=
+    document.getElementById('repoTable');
+
+
+  el.innerHTML=
+
+    `<div class="repo-row repo-head">
+
+      <div>Ejercicio</div>
+      <div>Carga RIR 2</div>
+      <div>Unidad</div>
+      <div>Incremento</div>
+      <div>Grupo / tipo</div>
+      <div></div>
+
+    </div>`
+
+    +
+
+    repo.map((e,i)=>`
+
+      <div class="repo-row">
+
+        <div class="wide">
+          <input
+            value="${esc(e.name)}"
+            onchange="upd(${i},'name',this.value)"
+          >
+        </div>
+
+        <div>
+          <input
+            value="${e.load}"
+            placeholder="?"
+            onchange="updNum(${i},'load',this.value)"
+          >
+        </div>
+
+        <div>
+          <input
+            value="${esc(e.unit)}"
+            onchange="upd(${i},'unit',this.value)"
+          >
+        </div>
+
+        <div>
+          <input
+            value="${e.inc}"
+            onchange="updNum(${i},'inc',this.value)"
+          >
+        </div>
+
+        <div>
+
+          <select
+            onchange="upd(${i},'group',this.value)"
+          >
+
+            ${
+              [
+                'Piernas',
+                'Pecho',
+                'Tríceps',
+                'Espalda',
+                'Bíceps',
+                'Hombros',
+                'Core'
+              ]
+              .map(g=>`
+
+                <option
+                  ${e.group===g?'selected':''}
+                >
+                  ${g}
+                </option>
+
+              `)
+              .join('')
+            }
+
+          </select>
+
+          <select
+            onchange="upd(${i},'type',this.value)"
+          >
+
+            <option
+              ${e.type==='Compuesto'?'selected':''}
+            >
+              Compuesto
+            </option>
+
+            <option
+              ${e.type==='Aislamiento'?'selected':''}
+            >
+              Aislamiento
+            </option>
+
+            <option
+              ${e.type==='Core'?'selected':''}
+            >
+              Core
+            </option>
+
+          </select>
+
+        </div>
+
+        <button
+          class="secondary danger"
+          onclick="delExercise(${i})"
+        >
+          Eliminar
+        </button>
+
+      </div>
+
+    `).join('');
+
+}
+
+
+function esc(s){
+
+  return String(s??'')
+    .replaceAll('&','&amp;')
+    .replaceAll('"','&quot;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;');
+
+}
+
+
+function upd(i,k,v){
+
+  repo[i][k]=v;
+
+  save();
+
+}
+
+
+function updNum(i,k,v){
+
+  repo[i][k]=
+    v.trim()==='?'
+      ? '?'
+      : Number(v);
+
+  save();
+
+}
+
+
+function addExercise(){
+
+  repo.push({
+
+    name:'Nuevo ejercicio',
+    group:'Pecho',
+    type:'Aislamiento',
+    load:'?',
+    unit:'kg',
+    inc:2.5,
+    priority:1,
+    cue:
+      'Añade aquí una indicación técnica breve y específica.',
+    alts:[]
+
+  });
+
+  save();
+
+  renderRepo();
+
+}
+
+
+function delExercise(i){
+
+  if(
+    confirm(
+      '¿Eliminar este ejercicio?'
+    )
+  ){
+
+    repo.splice(i,1);
+
+    save();
+
+    renderRepo();
+
+  }
+
+}
+
+
+function resetRepo(){
+
+  if(
+    confirm(
+      '¿Restaurar todas las cargas y ejercicios iniciales?'
+    )
+  ){
+
+    repo=
+      structuredClone(
+        initialRepo
+      );
+
+    save();
+
+    renderRepo();
+
+  }
+
+}
+
+
+function exportRepo(){
+
+  const blob=
+    new Blob(
+      [
+        JSON.stringify(
+          repo,
+          null,
+          2
+        )
+      ],
+      {
+        type:'application/json'
+      }
+    );
+
+  const a=
+    document.createElement('a');
+
+  a.href=
+    URL.createObjectURL(blob);
+
+  a.download=
+    'repositorio-gimnasio.json';
+
+  a.click();
+
+  URL.revokeObjectURL(
+    a.href
+  );
+
+}
+
+
+function importRepo(ev){
+
+  const f=
+    ev.target.files[0];
+
+  if(!f){
+    return;
+  }
+
+
+  const r=
+    new FileReader();
+
+
+  r.onload=()=>{
+
+    try{
+
+      repo=
+        JSON.parse(
+          r.result
+        );
+
+      save();
+
+      renderRepo();
+
+      alert(
+        'Repositorio importado correctamente.'
+      );
+
+    }catch(e){
+
+      alert(
+        'Archivo no válido.'
+      );
+
+    }
+
+  };
+
+
+  r.readAsText(f);
+
+}
+
+
 renderRepo();
+
 </script>
+
 </body>
 </html>
