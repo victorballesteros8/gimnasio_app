@@ -1299,7 +1299,7 @@ function renderRepoCard(e,i){
 
       <div class="edit-field" style="margin-top:11px">
         <label>Músculos / tags</label>
-        <div class="tag-editor">${ALL_TAGS.map(tag=>`<button type="button" class="tag-option ${e.tags.includes(tag)?'selected':''}" onclick="toggleEditTag(${i},${JSON.stringify(tag)})">${esc(tag)}</button>`).join('')}</div>
+        <div class="tag-editor">${ALL_TAGS.map(tag=>`<button type="button" class="tag-option ${editingTags.includes(tag)?'selected':''}" onclick="toggleEditTag(${i},${JSON.stringify(tag)})">${esc(tag)}</button>`).join('')}</div>
       </div>
 
       <div class="edit-actions">
@@ -1328,6 +1328,7 @@ function getRepoCard(i){
 
 function editExercise(i){
   editingIndex=i;
+  editingTags=[...(repo[i]?.tags||[])];
   renderRepo();
   requestAnimationFrame(()=>{
     const card=getRepoCard(i);
@@ -1335,18 +1336,18 @@ function editExercise(i){
   });
 }
 
-function cancelEdit(){editingIndex=null;renderRepo();}
+function cancelEdit(){editingIndex=null;editingTags=[];renderRepo();}
 
 function toggleEditTag(i,tag){
-  const card=getRepoCard(i);
-  if(!card)return;
-  const target=[...card.querySelectorAll('.tag-option')].find(b=>b.textContent.trim()===tag);
-  if(target)target.classList.toggle('selected');
+  if(editingIndex!==i)return;
+  const pos=editingTags.indexOf(tag);
+  if(pos===-1) editingTags.push(tag);
+  else editingTags.splice(pos,1);
+  renderRepo();
 }
 
 function getEditedTags(i){
-  const card=getRepoCard(i);
-  return card?[...card.querySelectorAll('.tag-option.selected')].map(b=>b.textContent.trim()):[];
+  return editingIndex===i?[...editingTags]:[...(repo[i]?.tags||[])];
 }
 
 function saveExercise(i){
@@ -1367,6 +1368,7 @@ function saveExercise(i){
 
   save();
   editingIndex=null;
+  editingTags=[];
   renderRepo();
 }
 
@@ -1376,6 +1378,7 @@ function deleteFromEdit(i){
   if(!window.confirm(`¿Eliminar "${exercise.name}" del repositorio?`))return;
   repo.splice(i,1);
   editingIndex=null;
+  editingTags=[];
   save();
   renderRepo();
 }
@@ -1393,6 +1396,7 @@ function addExercise(){
     cue:'Añade aquí una indicación técnica breve y específica.'
   });
   editingIndex=repo.length-1;
+  editingTags=[...(repo[editingIndex].tags||[])];
   save();
   renderRepo();
   requestAnimationFrame(()=>{
@@ -1405,6 +1409,7 @@ function resetRepo(){
   if(confirm('¿Restaurar todas las cargas, tags y ejercicios iniciales?')){
     repo=structuredClone(initialRepo);
     editingIndex=null;
+    editingTags=[];
     save();
     renderRepo();
   }
