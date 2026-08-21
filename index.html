@@ -851,6 +851,38 @@ li::marker{
     padding-bottom:50px;
   }
 }
+
+/* Repositorio cerrado + tags */
+.repo-list{display:grid;gap:10px;position:relative;z-index:1}
+.repo-card{background:linear-gradient(145deg,rgba(255,255,255,.025),transparent 55%),var(--card2);border:1px solid var(--line);border-radius:17px;padding:14px}
+.repo-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.repo-card-name{font-size:15px;font-weight:850;line-height:1.35}
+.repo-card-meta{margin-top:4px;color:var(--muted);font-size:11px}
+.repo-card-actions{display:flex;gap:6px}
+.icon-btn{width:36px;height:36px;display:grid;place-items:center;background:var(--bg2);color:#dce1e8;border:1px solid var(--line);border-radius:10px;font-size:17px;cursor:pointer}
+.icon-btn.save{color:#0b0d0f;background:var(--accent);border-color:var(--accent)}
+.repo-info-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.repo-tag{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;background:var(--accent-soft);border:1px solid var(--accent-border);color:var(--accent);font-size:10px;font-weight:800}
+.repo-stat{color:var(--muted);font-size:11px;padding:5px 8px;border-radius:999px;background:var(--bg2);border:1px solid var(--line)}
+.repo-edit{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.edit-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:9px}
+.edit-field label{display:block;color:var(--muted);font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.5px;margin:0 0 6px}
+.edit-field input,.edit-field select{width:100%;min-height:42px;padding:9px 10px;color:var(--text);background:var(--bg2);border:1px solid var(--line);border-radius:10px;outline:none;font-size:13px}
+.edit-field input:focus,.edit-field select:focus{border-color:rgba(184,243,75,.55);box-shadow:0 0 0 3px rgba(184,243,75,.06)}
+.tag-editor{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.tag-option{border:1px solid var(--line);background:var(--bg2);color:#aeb5c0;border-radius:999px;padding:7px 9px;font-size:10px;font-weight:800;cursor:pointer}
+.tag-option.selected{background:var(--accent-soft);color:var(--accent);border-color:var(--accent-border)}
+.edit-actions{display:flex;gap:7px;margin-top:11px}
+.edit-actions .secondary,.edit-actions .primary{flex:1}
+.repo-note{margin:0 0 12px;color:var(--muted);font-size:12px;line-height:1.5}
+.repo-search{position:relative;margin-top:12px;z-index:2}
+.repo-search input{width:100%;min-height:46px;padding:12px 14px 12px 40px;color:var(--text);background:var(--bg2);border:1px solid var(--line);border-radius:13px;outline:none;font-size:14px}
+.repo-search input:focus{border-color:rgba(184,243,75,.55);box-shadow:0 0 0 3px rgba(184,243,75,.06)}
+.repo-search::before{content:"⌕";position:absolute;left:14px;top:10px;color:var(--muted);font-size:20px;line-height:24px;pointer-events:none}
+.repo-empty{padding:25px 14px;text-align:center;color:var(--muted);font-size:13px;border:1px dashed var(--line);border-radius:15px;background:var(--bg2)}
+.repo-count{margin-top:8px;color:var(--muted2);font-size:10px;font-weight:700}
+@media(max-width:760px){.edit-grid{grid-template-columns:1fr 1fr}.edit-grid .full{grid-column:1/-1}.edit-actions{flex-direction:column}}
+
 </style>
 </head>
 
@@ -886,6 +918,7 @@ li::marker{
           <option>Pecho / Tríceps</option>
           <option>Espalda / Bíceps</option>
           <option>Hombros / Core</option>
+          <option>Torso</option>
           <option>Fullbody</option>
         </select>
       </div>
@@ -933,50 +966,19 @@ li::marker{
 
 
 <section id="repo" class="hidden">
-
-  <div class="panel">
-
-    <h2>Repositorio de ejercicios</h2>
-
-    <p class="hint">
-      Edita la carga que actualmente puedes mover con aproximadamente RIR 2.
-      En ejercicios no calibrados deja “?” hasta probarlos. El incremento
-      sirve para calcular las series pesadas y futuras propuestas.
-    </p>
-
-    <div class="actions">
-
-      <button class="primary" onclick="addExercise()">
-        Añadir ejercicio
-      </button>
-
-      <button class="secondary" onclick="resetRepo()">
-        Restaurar valores iniciales
-      </button>
-
-      <button class="secondary" onclick="exportRepo()">
-        Exportar repositorio
-      </button>
-
-      <label class="secondary" style="cursor:pointer">
-        Importar
-        <input
-          id="importFile"
-          type="file"
-          accept="application/json"
-          style="display:none"
-          onchange="importRepo(event)"
-        >
-      </label>
-
-    </div>
-
-  </div>
-
-  <div class="panel">
-    <div id="repoTable"></div>
-  </div>
-
+<div class="panel">
+<h2>Repositorio de ejercicios</h2>
+<p class="repo-note">Los ejercicios están bloqueados para evitar cambios accidentales. Pulsa ✎ para editar uno. Los tags indican qué músculos o zonas trabaja y se usan para encontrar alternativas equivalentes.</p>
+<div class="repo-search">
+  <input id="repoSearch" type="search" placeholder="Buscar ejercicio, músculo o grupo..." oninput="renderRepo()" autocomplete="off">
+  <div id="repoCount" class="repo-count"></div>
+</div>
+<div class="actions">
+<button class="primary" onclick="addExercise()">＋ Añadir ejercicio</button>
+<button class="secondary" onclick="resetRepo()">Restaurar valores iniciales</button>
+</div>
+</div>
+<div class="panel"><div id="repoTable"></div></div>
 </section>
 
 
@@ -1010,12 +1012,16 @@ li::marker{
       </li>
 
       <li>
+        Torso permite trabajar pecho, espalda, hombros, bíceps, tríceps y core sin incluir ejercicios de piernas.
+      </li>
+
+      <li>
         Los ejercicios con carga “?” se muestran como no calibrados
         y no reciben una carga inventada.
       </li>
 
       <li>
-        Las alternativas son deliberadamente sencillas y de patrón/músculo semejante.
+        Las alternativas se seleccionan por grupo y por músculos objetivo: deben trabajar todos los tags del ejercicio actual, evitando el mismo perfil muscular y cualquier ejercicio ya presente en la sesión.
       </li>
 
     </ul>
@@ -1028,846 +1034,354 @@ li::marker{
 
 
 <script>
+const ALL_GROUPS = ['Piernas','Pecho','Tríceps','Espalda','Bíceps','Hombros','Core'];
+const ALL_TAGS = ["Cuádriceps","Isquios","Glúteos","Gemelos","Pectoral","Pectoral superior","Pectoral inferior","Tríceps","Dorsal","Espalda media","Espalda alta","Bíceps","Braquial","Deltoide anterior","Deltoide lateral","Deltoide posterior","Trapecio","Core","Flexores de cadera"];
+const initialRepo = [{"name": "Prensa de piernas", "group": "Piernas", "type": "Compuesto", "load": 80, "unit": "kg", "inc": 5, "priority": 3, "tags": ["Cuádriceps", "Glúteos"], "cue": "Pies estables y rodillas siguiendo la línea de los pies; desciende con control sin perder la posición pélvica."}, {"name": "Sentadilla guiada en máquina", "group": "Piernas", "type": "Compuesto", "load": 50, "unit": "kg", "inc": 2.5, "priority": 3, "tags": ["Cuádriceps", "Glúteos"], "cue": "Apoya toda la planta y desciende hasta un rango cómodo manteniendo el tronco estable."}, {"name": "Extensión de cuádriceps", "group": "Piernas", "type": "Aislamiento", "load": 40, "unit": "kg", "inc": 5, "priority": 2, "tags": ["Cuádriceps"], "cue": "Ajusta el eje a la rodilla y extiende sin despegar la cadera del asiento."}, {"name": "Curl femoral sentado", "group": "Piernas", "type": "Aislamiento", "load": 36, "unit": "kg", "inc": 5, "priority": 2, "tags": ["Isquios"], "cue": "Mantén la cadera pegada al respaldo y lleva los talones hacia abajo sin rebote."}, {"name": "Peso muerto rumano", "group": "Piernas", "type": "Compuesto", "load": 60, "unit": "kg", "inc": 2.5, "priority": 3, "tags": ["Isquios", "Glúteos"], "cue": "Rodillas ligeramente flexionadas, cadera atrás y barra próxima a los muslos durante todo el recorrido."}, {"name": "Elevación de gemelo sentado", "group": "Piernas", "type": "Aislamiento", "load": 30, "unit": "kg", "inc": 5, "priority": 1, "tags": ["Gemelos"], "cue": "Baja el talón con control y busca una contracción completa sin rebotar."}, {"name": "Gemelo de pie en máquina", "group": "Piernas", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 5, "priority": 1, "tags": ["Gemelos"], "cue": "Mantén las piernas estables, baja el talón con control y busca una contracción completa sin rebote."}, {"name": "Hip thrust", "group": "Piernas", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": 2, "tags": ["Glúteos"], "cue": "Barbilla ligeramente hacia el pecho y pelvis neutra; termina extendiendo la cadera sin hiperextender la espalda."}, {"name": "Press banca", "group": "Pecho", "type": "Compuesto", "load": 50, "unit": "kg", "inc": 2.5, "priority": 3, "tags": ["Pectoral", "Tríceps"], "cue": "Pies firmes, escápulas retraídas y barra hacia la zona media-baja del pecho."}, {"name": "Press banca inclinado", "group": "Pecho", "type": "Compuesto", "load": 40, "unit": "kg", "inc": 2.5, "priority": 3, "tags": ["Pectoral superior", "Deltoide anterior", "Tríceps"], "cue": "Banco moderadamente inclinado y hombros atrás; baja las manos hacia la parte alta del pecho."}, {"name": "Aperturas con mancuernas tumbado", "group": "Pecho", "type": "Aislamiento", "load": 14, "unit": "kg/mancuerna", "inc": 1, "priority": 2, "tags": ["Pectoral"], "cue": "Codos suavemente flexionados y recorrido amplio sin perder el control en la posición estirada."}, {"name": "Press de pecho en máquina", "group": "Pecho", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": 2, "tags": ["Pectoral", "Tríceps"], "cue": "Ajusta el asiento para que las asas queden a la altura media del pecho y empuja sin elevar hombros."}, {"name": "Cruce de poleas", "group": "Pecho", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 2.5, "priority": 1, "tags": ["Pectoral"], "cue": "Mantén el tronco estable y aproxima los brazos al frente sin perder tensión pectoral."}, {"name": "Extensión de tríceps en polea", "group": "Tríceps", "type": "Aislamiento", "load": 20, "unit": "kg", "inc": 2.5, "priority": 2, "tags": ["Tríceps"], "cue": "Codos pegados al cuerpo y hombros quietos; extiende hasta bloquear cómodamente el codo."}, {"name": "Extensión de tríceps en polea baja unilateral", "group": "Tríceps", "type": "Aislamiento", "load": 5, "unit": "kg/mano", "inc": 1, "priority": 1, "tags": ["Tríceps"], "cue": "Codo estable y brazo alineado con el tronco; mueve solo el antebrazo."}, {"name": "Fondos de tríceps", "group": "Tríceps", "type": "Compuesto", "load": "?", "unit": "peso corporal", "inc": 2.5, "priority": 2, "tags": ["Tríceps", "Pectoral inferior"], "cue": "Tronco relativamente vertical y codos controlados; añade lastre solo cuando el peso corporal sea cómodo."}, {"name": "Press cerrado", "group": "Tríceps", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 2.5, "priority": 2, "tags": ["Tríceps", "Pectoral"], "cue": "Agarre ligeramente más cerrado que el press convencional y codos bajo control durante la bajada."}, {"name": "Jalón en máquina", "group": "Espalda", "type": "Compuesto", "load": 100, "unit": "kg", "inc": 5, "priority": 3, "tags": ["Dorsal", "Bíceps"], "cue": "Inicia el movimiento deprimiendo las escápulas y lleva el agarre hacia la parte alta del pecho sin balancearte."}, {"name": "Dominadas", "group": "Espalda", "type": "Compuesto", "load": "?", "unit": "peso corporal/lastre", "inc": 2.5, "priority": 3, "tags": ["Dorsal", "Bíceps"], "cue": "Inicia con escápulas activas y lleva el pecho hacia la barra manteniendo el tronco estable."}, {"name": "Remo con mancuerna en banco", "group": "Espalda", "type": "Compuesto", "load": 16, "unit": "kg/mancuerna", "inc": 2, "priority": 3, "tags": ["Espalda media", "Dorsal", "Bíceps"], "cue": "Espalda neutra y hombro lejos de la oreja; lleva el codo hacia la cadera."}, {"name": "Remo sentado en polea", "group": "Espalda", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": 2, "tags": ["Espalda media", "Dorsal", "Bíceps"], "cue": "Mantén el tronco estable y lleva los codos atrás sin convertirlo en un balanceo."}, {"name": "Remo con pecho apoyado", "group": "Espalda", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": 2, "tags": ["Espalda media", "Dorsal", "Bíceps"], "cue": "Pecho apoyado y hombros estables; tira con los codos y evita encogerlos hacia las orejas."}, {"name": "Curl martillo", "group": "Bíceps", "type": "Aislamiento", "load": 16, "unit": "kg/mancuerna", "inc": 1, "priority": 2, "tags": ["Bíceps", "Braquial"], "cue": "Muñeca neutra y codos junto al cuerpo; evita adelantar el hombro al subir."}, {"name": "Curl martillo en polea baja", "group": "Bíceps", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 2.5, "priority": 1, "tags": ["Bíceps", "Braquial"], "cue": "Mantén el codo estable y la muñeca neutra durante todo el recorrido."}, {"name": "Curl concentrado", "group": "Bíceps", "type": "Aislamiento", "load": 14, "unit": "kg/mancuerna", "inc": 1, "priority": 1, "tags": ["Bíceps"], "cue": "Apoya el brazo en el muslo y evita que el hombro avance al completar la flexión."}, {"name": "Curl barra EZ", "group": "Bíceps", "type": "Aislamiento", "load": 20, "unit": "kg + barra", "inc": 2.5, "priority": 2, "tags": ["Bíceps"], "cue": "Codos bajo el hombro y torso quieto; sube sin convertir el movimiento en un balanceo."}, {"name": "Curl predicador", "group": "Bíceps", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 2.5, "priority": 1, "tags": ["Bíceps"], "cue": "Mantén el brazo apoyado y no rebotes al llegar a la extensión."}, {"name": "Press militar de pie", "group": "Hombros", "type": "Compuesto", "load": 30, "unit": "kg", "inc": 2.5, "priority": 3, "tags": ["Deltoide anterior", "Tríceps"], "cue": "Glúteos y abdomen activos; barra cerca de la cara y cabeza atravesando la línea de brazos arriba."}, {"name": "Press de hombros en máquina", "group": "Hombros", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": 2, "tags": ["Deltoide anterior", "Tríceps"], "cue": "Espalda apoyada y muñecas neutras; empuja sin encoger los hombros al final."}, {"name": "Elevaciones laterales", "group": "Hombros", "type": "Aislamiento", "load": 5, "unit": "kg/mancuerna", "inc": 1, "priority": 2, "tags": ["Deltoide lateral"], "cue": "Codos ligeramente por encima de las manos y recorrido controlado hasta aproximadamente la altura del hombro."}, {"name": "Elevación lateral en polea", "group": "Hombros", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 1, "priority": 1, "tags": ["Deltoide lateral"], "cue": "Mantén tensión continua y eleva el brazo lateralmente sin inclinar el tronco."}, {"name": "Face pull", "group": "Hombros", "type": "Aislamiento", "load": 15, "unit": "kg", "inc": 2.5, "priority": 1, "tags": ["Deltoide posterior", "Espalda alta"], "cue": "Tira hacia la cara con codos altos y rota externamente manteniendo el tronco estable."}, {"name": "Encogimiento de hombros con mancuerna", "group": "Hombros", "type": "Aislamiento", "load": 20, "unit": "kg/mancuerna", "inc": 2, "priority": 1, "tags": ["Trapecio"], "cue": "Eleva los hombros verticalmente sin hacer círculos y pausa brevemente arriba."}, {"name": "Abdominales inclinados en banco", "group": "Core", "type": "Core", "load": 15, "unit": "kg", "inc": 2.5, "priority": 2, "tags": ["Core"], "cue": "Flexiona la columna de forma controlada sin tirar del cuello y vuelve sin rebote."}, {"name": "Abdominales colgado en barra", "group": "Core", "type": "Core", "load": "?", "unit": "peso corporal", "inc": 2.5, "priority": 1, "tags": ["Core", "Flexores de cadera"], "cue": "Inicia con retroversión pélvica y eleva las rodillas sin balancear el cuerpo."}, {"name": "Crunch en polea", "group": "Core", "type": "Core", "load": "?", "unit": "kg", "inc": 2.5, "priority": 2, "tags": ["Core"], "cue": "Flexiona el tronco acercando las costillas a la pelvis sin tirar de los brazos."}];
 
-const initialRepo = [
-
-{name:'Prensa de piernas',group:'Piernas',type:'Compuesto',load:80,unit:'kg',inc:5,priority:3,cue:'Pies estables y rodillas siguiendo la línea de los pies; desciende con control sin perder la posición pélvica.',alts:['Sentadilla guiada en máquina','Sentadilla goblet']},
-
-{name:'Sentadilla guiada en máquina',group:'Piernas',type:'Compuesto',load:50,unit:'kg',inc:2.5,priority:3,cue:'Apoya toda la planta y desciende hasta un rango cómodo manteniendo el tronco estable.',alts:['Prensa de piernas','Sentadilla goblet']},
-
-{name:'Extensión de cuádriceps',group:'Piernas',type:'Aislamiento',load:40,unit:'kg',inc:5,priority:2,cue:'Ajusta el eje a la rodilla y extiende sin despegar la cadera del asiento.',alts:['Sentadilla española']},
-
-{name:'Curl femoral sentado',group:'Piernas',type:'Aislamiento',load:36,unit:'kg',inc:5,priority:2,cue:'Mantén la cadera pegada al respaldo y lleva los talones hacia abajo sin rebote.',alts:['Curl femoral tumbado','Peso muerto rumano']},
-
-{name:'Peso muerto rumano',group:'Piernas',type:'Compuesto',load:60,unit:'kg',inc:2.5,priority:3,cue:'Rodillas ligeramente flexionadas, cadera atrás y barra próxima a los muslos durante todo el recorrido.',alts:['Curl femoral sentado','Hip thrust']},
-
-{name:'Elevación de gemelo sentado',group:'Piernas',type:'Aislamiento',load:30,unit:'kg',inc:5,priority:1,cue:'Baja el talón con control y busca una contracción completa sin rebotar.',alts:['Gemelo de pie en máquina']},
-
-{name:'Hip thrust',group:'Piernas',type:'Compuesto',load:'?',unit:'kg',inc:5,priority:2,cue:'Barbilla ligeramente hacia el pecho y pelvis neutra; termina extendiendo la cadera sin hiperextender la espalda.',alts:['Peso muerto rumano']},
-
-{name:'Press banca',group:'Pecho',type:'Compuesto',load:50,unit:'kg',inc:2.5,priority:3,cue:'Pies firmes, escápulas retraídas y barra hacia la zona media-baja del pecho.',alts:['Press banca con mancuernas','Press de pecho en máquina']},
-
-{name:'Press banca inclinado',group:'Pecho',type:'Compuesto',load:40,unit:'kg',inc:2.5,priority:3,cue:'Banco moderadamente inclinado y hombros atrás; baja las manos hacia la parte alta del pecho.',alts:['Press inclinado con mancuernas','Press de pecho en máquina']},
-
-{name:'Aperturas con mancuernas tumbado',group:'Pecho',type:'Aislamiento',load:14,unit:'kg/mancuerna',inc:1,priority:2,cue:'Codos suavemente flexionados y recorrido amplio sin perder el control en la posición estirada.',alts:['Cruce de poleas','Pec deck']},
-
-{name:'Press de pecho en máquina',group:'Pecho',type:'Compuesto',load:'?',unit:'kg',inc:5,priority:2,cue:'Ajusta el asiento para que las asas queden a la altura media del pecho y empuja sin elevar hombros.',alts:['Press banca','Press banca inclinado']},
-
-{name:'Cruce de poleas',group:'Pecho',type:'Aislamiento',load:'?',unit:'kg',inc:2.5,priority:1,cue:'Mantén el tronco estable y aproxima los brazos al frente sin perder tensión pectoral.',alts:['Aperturas con mancuernas tumbado','Pec deck']},
-
-{name:'Extensión de tríceps en polea',group:'Tríceps',type:'Aislamiento',load:20,unit:'kg',inc:2.5,priority:2,cue:'Codos pegados al cuerpo y hombros quietos; extiende hasta bloquear cómodamente el codo.',alts:['Extensión de tríceps con cuerda','Fondos de tríceps']},
-
-{name:'Extensión de tríceps en polea baja unilateral',group:'Tríceps',type:'Aislamiento',load:5,unit:'kg/mano',inc:1,priority:1,cue:'Codo estable y brazo alineado con el tronco; mueve solo el antebrazo.',alts:['Extensión de tríceps en polea']},
-
-{name:'Fondos de tríceps',group:'Tríceps',type:'Compuesto',load:'?',unit:'peso corporal',inc:2.5,priority:2,cue:'Tronco relativamente vertical y codos controlados; añade lastre solo cuando el peso corporal sea cómodo.',alts:['Extensión de tríceps en polea','Press cerrado']},
-
-{name:'Press cerrado',group:'Tríceps',type:'Compuesto',load:'?',unit:'kg',inc:2.5,priority:2,cue:'Agarre ligeramente más cerrado que el press convencional y codos bajo control durante la bajada.',alts:['Fondos de tríceps','Extensión de tríceps en polea']},
-
-{name:'Jalón en máquina',group:'Espalda',type:'Compuesto',load:100,unit:'kg',inc:5,priority:3,cue:'Inicia el movimiento deprimiendo las escápulas y lleva el agarre hacia la parte alta del pecho sin balancearte.',alts:['Jalón unilateral en polea','Dominadas asistidas']},
-
-{name:'Dominadas',group:'Espalda',type:'Compuesto',load:'?',unit:'peso corporal/lastre',inc:2.5,priority:3,cue:'Inicia con escápulas activas y lleva el pecho hacia la barra manteniendo el tronco estable.',alts:['Jalón en máquina','Dominadas asistidas']},
-
-{name:'Remo con mancuerna en banco',group:'Espalda',type:'Compuesto',load:16,unit:'kg/mancuerna',inc:2,priority:3,cue:'Espalda neutra y hombro lejos de la oreja; lleva el codo hacia la cadera.',alts:['Remo sentado en polea','Remo con pecho apoyado']},
-
-{name:'Remo sentado en polea',group:'Espalda',type:'Compuesto',load:'?',unit:'kg',inc:5,priority:2,cue:'Mantén el tronco estable y lleva los codos atrás sin convertirlo en un balanceo.',alts:['Remo con mancuerna en banco','Remo con pecho apoyado']},
-
-{name:'Remo con pecho apoyado',group:'Espalda',type:'Compuesto',load:'?',unit:'kg',inc:5,priority:2,cue:'Pecho apoyado y hombros estables; tira con los codos y evita encogerlos hacia las orejas.',alts:['Remo sentado en polea','Remo con mancuerna en banco']},
-
-{name:'Curl martillo',group:'Bíceps',type:'Aislamiento',load:16,unit:'kg/mancuerna',inc:1,priority:2,cue:'Muñeca neutra y codos junto al cuerpo; evita adelantar el hombro al subir.',alts:['Curl martillo en polea baja','Curl inclinado con mancuernas']},
-
-{name:'Curl martillo en polea baja',group:'Bíceps',type:'Aislamiento',load:'?',unit:'kg',inc:2.5,priority:1,cue:'Mantén el codo estable y la muñeca neutra durante todo el recorrido.',alts:['Curl martillo','Curl unilateral en polea']},
-
-{name:'Curl concentrado',group:'Bíceps',type:'Aislamiento',load:14,unit:'kg/mancuerna',inc:1,priority:1,cue:'Apoya el brazo en el muslo y evita que el hombro avance al completar la flexión.',alts:['Curl predicador','Curl unilateral en polea']},
-
-{name:'Curl barra EZ',group:'Bíceps',type:'Aislamiento',load:20,unit:'kg + barra',inc:2.5,priority:2,cue:'Codos bajo el hombro y torso quieto; sube sin convertir el movimiento en un balanceo.',alts:['Curl predicador','Curl con mancuernas']},
-
-{name:'Curl predicador',group:'Bíceps',type:'Aislamiento',load:'?',unit:'kg',inc:2.5,priority:1,cue:'Mantén el brazo apoyado y no rebotes al llegar a la extensión.',alts:['Curl concentrado','Curl barra EZ']},
-
-{name:'Press militar de pie',group:'Hombros',type:'Compuesto',load:30,unit:'kg',inc:2.5,priority:3,cue:'Glúteos y abdomen activos; barra cerca de la cara y cabeza atravesando la línea de brazos arriba.',alts:['Press de hombros en máquina','Press con mancuernas']},
-
-{name:'Press de hombros en máquina',group:'Hombros',type:'Compuesto',load:'?',unit:'kg',inc:5,priority:2,cue:'Espalda apoyada y muñecas neutras; empuja sin encoger los hombros al final.',alts:['Press militar de pie','Press con mancuernas']},
-
-{name:'Elevaciones laterales',group:'Hombros',type:'Aislamiento',load:5,unit:'kg/mancuerna',inc:1,priority:2,cue:'Codos ligeramente por encima de las manos y recorrido controlado hasta aproximadamente la altura del hombro.',alts:['Elevación lateral en polea','Máquina de elevaciones laterales']},
-
-{name:'Elevación lateral en polea',group:'Hombros',type:'Aislamiento',load:'?',unit:'kg',inc:1,priority:1,cue:'Mantén tensión continua y eleva el brazo lateralmente sin inclinar el tronco.',alts:['Elevaciones laterales','Máquina de elevaciones laterales']},
-
-{name:'Face pull',group:'Hombros',type:'Aislamiento',load:15,unit:'kg',inc:2.5,priority:1,cue:'Tira hacia la cara con codos altos y rota externamente manteniendo el tronco estable.',alts:['Pájaros en máquina','Pájaros con mancuernas']},
-
-{name:'Encogimiento de hombros con mancuerna',group:'Hombros',type:'Aislamiento',load:20,unit:'kg/mancuerna',inc:2,priority:1,cue:'Eleva los hombros verticalmente sin hacer círculos y pausa brevemente arriba.',alts:['Encogimiento en máquina']},
-
-{name:'Abdominales inclinados en banco',group:'Core',type:'Core',load:15,unit:'kg',inc:2.5,priority:2,cue:'Flexiona la columna de forma controlada sin tirar del cuello y vuelve sin rebote.',alts:['Crunch en polea']},
-
-{name:'Abdominales colgado en barra',group:'Core',type:'Core',load:'?',unit:'peso corporal',inc:2.5,priority:1,cue:'Inicia con retroversión pélvica y eleva las rodillas sin balancear el cuerpo.',alts:['Elevación de rodillas en máquina','Crunch en polea']},
-
-{name:'Crunch en polea',group:'Core',type:'Core',load:'?',unit:'kg',inc:2.5,priority:2,cue:'Flexiona el tronco acercando las costillas a la pelvis sin tirar de los brazos.',alts:['Abdominales inclinados en banco','Abdominales colgado en barra']}
-
-];
-
-
-let repo =
-  JSON.parse(localStorage.getItem('gymRepo') || 'null')
-  || structuredClone(initialRepo);
+let repo=JSON.parse(localStorage.getItem('gymRepo')||'null');
+if(!Array.isArray(repo)) repo=structuredClone(initialRepo);
+repo=normalizeRepo(repo);
 
 let lastPlan=[];
-
+let editingIndex=null;
 
 const intensityMap={
-  'Muy baja':{
-    sets:2,
-    rir:3,
-    heavy:false,
-    exerciseFactor:.62
-  },
-
-  'Baja':{
-    sets:3,
-    rir:2,
-    heavy:false,
-    exerciseFactor:.78
-  },
-
-  'Normal':{
-    sets:3,
-    rir:2,
-    heavy:false,
-    exerciseFactor:1
-  },
-
-  'Alta':{
-    sets:4,
-    rir:1,
-    heavy:true,
-    exerciseFactor:1.15
-  },
-
-  'Muy alta':{
-    sets:4,
-    rir:1,
-    heavy:true,
-    exerciseFactor:1.3
-  }
+  'Muy baja':{sets:2,rir:3,heavy:false,exerciseFactor:.62},
+  'Baja':{sets:3,rir:2,heavy:false,exerciseFactor:.78},
+  'Normal':{sets:3,rir:2,heavy:false,exerciseFactor:1},
+  'Alta':{sets:4,rir:1,heavy:true,exerciseFactor:1.15},
+  'Muy alta':{sets:4,rir:1,heavy:true,exerciseFactor:1.3}
 };
-
-
-const durationMap={
-  45:5,
-  60:7,
-  75:9,
-  90:11
-};
-
-
+const durationMap={45:5,60:7,75:9,90:11};
 const splitGroups={
   'Piernas':['Piernas'],
   'Pecho / Tríceps':['Pecho','Tríceps'],
   'Espalda / Bíceps':['Espalda','Bíceps'],
-  'Hombros / Core':['Hombros','Core']
+  'Hombros / Core':['Hombros','Core'],
+  'Torso':['Pecho','Espalda','Hombros','Bíceps','Tríceps','Core']
 };
 
-
-function save(){
-  localStorage.setItem('gymRepo',JSON.stringify(repo));
+function normalizeRepo(list){
+  return list.map(e=>({
+    name:e.name||'Nuevo ejercicio',
+    group:e.group||'Pecho',
+    type:e.type||'Aislamiento',
+    load:e.load??'?',
+    unit:e.unit||'kg',
+    inc:Number(e.inc)||2.5,
+    priority:Number(e.priority)||1,
+    tags:Array.isArray(e.tags)&&e.tags.length?e.tags:inferTags(e),
+    cue:e.cue||'Añade aquí una indicación técnica breve y específica.'
+  }));
 }
 
+function inferTags(e){
+  const n=(e.name||'').toLowerCase(),tags=[];
+  const rules=[
+    [/gemelo/,'Gemelos'],[/cuádriceps|extension de cuádriceps/,'Cuádriceps'],[/femoral|rumano/,'Isquios'],[/hip thrust/,'Glúteos'],
+    [/press banca|pectoral|aperturas|cruce/,'Pectoral'],[/tr[íi]ceps|fondos|press cerrado/,'Tríceps'],
+    [/jal[oó]n|dominada|remo/,'Dorsal'],[/curl/,'Bíceps'],[/militar|hombros/,'Deltoide anterior'],[/lateral/,'Deltoide lateral'],
+    [/face pull/,'Deltoide posterior'],[/encogimiento/,'Trapecio'],[/abdominal|crunch/,'Core']
+  ];
+  rules.forEach(([rx,tag])=>{if(rx.test(n)&&!tags.includes(tag))tags.push(tag)});
+  return tags.length?tags:['Core'];
+}
+
+function save(){localStorage.setItem('gymRepo',JSON.stringify(repo));}
 
 function showTab(t){
-
-  ['plan','repo','info']
-    .forEach(x =>
-      document
-        .getElementById(x)
-        .classList
-        .toggle('hidden',x!==t)
-    );
-
-  ['Plan','Repo','Info']
-    .forEach(x =>
-      document
-        .getElementById('tab'+x)
-        .classList
-        .toggle('active',x.toLowerCase()===t)
-    );
-
-  if(t==='repo'){
-    renderRepo();
-  }
-
-  window.scrollTo({
-    top:0,
-    behavior:'smooth'
-  });
+  ['plan','repo','info'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==t));
+  ['Plan','Repo','Info'].forEach(x=>document.getElementById('tab'+x).classList.toggle('active',x.toLowerCase()===t));
+  if(t==='repo')renderRepo();
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-
-function fmtLoad(x){
-  return x==='?'
-    ? '?'
-    : (Number.isInteger(x)?x:x.toFixed(1));
-}
-
+function fmtLoad(x){return x==='?'?'?':(Number.isInteger(Number(x))?Number(x):Number(x).toFixed(1));}
 
 function groupsFor(type){
-
-  return type==='Fullbody'
-    ? [
-        'Piernas',
-        'Pecho',
-        'Espalda',
-        'Hombros',
-        'Bíceps',
-        'Tríceps',
-        'Core'
-      ]
-    : splitGroups[type];
-
+  return type==='Fullbody'?['Piernas','Pecho','Espalda','Hombros','Bíceps','Tríceps','Core']:splitGroups[type];
 }
 
+function sameTagProfile(a,b){
+  const aTags=[...(a.tags||[])].sort().join('|');
+  const bTags=[...(b.tags||[])].sort().join('|');
+  return aTags===bTags;
+}
+
+function hasAllTags(candidate,reference){
+  const candidateTags=new Set(candidate.tags||[]);
+  return (reference.tags||[]).every(tag=>candidateTags.has(tag));
+}
+
+/* Selecciona ejercicios evitando perfiles musculares idénticos dentro de una misma sesión. */
+function pickForGroup(group,count,already=[]){
+  const usedNames=new Set(already.map(e=>e.name));
+  const usedProfiles=new Set(already.map(e=>[...(e.tags||[])].sort().join('|')));
+  const candidates=repo
+    .filter(e=>e.group===group&&!usedNames.has(e.name))
+    .sort((a,b)=>b.priority-a.priority);
+
+  const selected=[];
+  for(const e of candidates){
+    const profile=[...(e.tags||[])].sort().join('|');
+    if(usedProfiles.has(profile)) continue;
+    selected.push(e);
+    usedNames.add(e.name);
+    usedProfiles.add(profile);
+    if(selected.length>=count)break;
+  }
+  return selected;
+}
 
 function chooseExercises(type,duration){
-
-  const groups=groupsFor(type);
-  const target=durationMap[duration];
-
-  let pool=[];
-
-  groups.forEach(g=>{
-
-    let arr=repo
-      .filter(e=>e.group===g)
-      .sort((a,b)=>b.priority-a.priority);
-
-    if(type==='Fullbody'){
-      arr=arr.slice(0,3);
-    }
-
-    pool.push(...arr);
-
-  });
-
-
-  if(type==='Fullbody'){
-
-    const selected=[];
-
-    const wanted=[
-      'Piernas',
-      'Pecho',
-      'Espalda',
-      'Hombros',
-      'Core'
-    ];
-
-    wanted.forEach(g=>{
-
-      const a=pool.filter(e=>e.group===g);
-
-      if(a[0]){
-        selected.push(a[0]);
-      }
-
-    });
-
-
-    if(duration>=60){
-
-      const extras=
-        pool
-          .filter(e=>!selected.includes(e))
-          .sort((a,b)=>b.priority-a.priority);
-
-      selected.push(
-        ...extras.slice(
-          0,
-          Math.max(1,target-selected.length)
-        )
-      );
-
-    }
-
-    return selected.slice(0,target);
-
-  }
-
-
+  const target=durationMap[duration],groups=groupsFor(type);
   let selected=[];
 
-  groups.forEach(g=>{
+  if(type==='Fullbody'){
+    ['Piernas','Pecho','Espalda','Hombros','Core'].forEach(g=>{
+      const p=pickForGroup(g,1,selected);
+      if(p[0])selected.push(p[0]);
+    });
 
-    const a=pool.filter(e=>e.group===g);
-
-    const n=
-      type==='Piernas'
-        ? Math.ceil(target/groups.length)
-        : Math.max(
-            2,
-            Math.ceil(target/groups.length)
-          );
-
-    selected.push(...a.slice(0,n));
-
-  });
-
-
-  selected=
-    selected
-      .sort((a,b)=>b.priority-a.priority)
-      .slice(0,target);
-
-  return selected;
-
-}
-
-
-function setPlanFor(e,intensity){
-
-  const im=intensityMap[intensity];
-  const load=e.load;
-
-  if(load==='?'){
-
-    return {
-      text:
-        `${im.sets} × 8–12 · ? · RIR ${im.rir}`,
-
-      note:
-        'Carga sin calibrar: usa una carga que te deje aproximadamente el RIR indicado y guárdala después en el repositorio.'
-    };
-
+    while(selected.length<target){
+      let added=false;
+      for(const g of groups){
+        const p=pickForGroup(g,1,selected);
+        if(p[0]){selected.push(p[0]);added=true;}
+        if(selected.length>=target)break;
+      }
+      if(!added)break;
+    }
+    return selected.slice(0,target);
   }
 
+  groups.forEach(g=>{
+    const n=type==='Piernas'?Math.ceil(target/groups.length):Math.max(2,Math.ceil(target/groups.length));
+    selected.push(...pickForGroup(g,n,selected));
+  });
+
+  return selected.sort((a,b)=>b.priority-a.priority).slice(0,target);
+}
+
+function getSwapCandidates(old,i){
+  return repo.filter(e=>
+    e.name!==old.name &&
+    e.group===old.group &&
+    hasAllTags(e,old) &&
+    !lastPlan.some((current,index)=>index!==i&&current.name===e.name)
+  ).sort((a,b)=>b.priority-a.priority);
+}
+
+function hasAlternative(i){
+  return !!lastPlan[i]&&getSwapCandidates(lastPlan[i],i).length>0;
+}
+
+function swapExercise(i){
+  const candidates=getSwapCandidates(lastPlan[i],i);
+  if(!candidates.length)return;
+  lastPlan[i]=candidates[Math.floor(Math.random()*candidates.length)];
+  renderTraining();
+}
+
+function setPlanFor(e,intensity){
+  const im=intensityMap[intensity],load=e.load;
+
+  if(load==='?')return{
+    text:`${im.sets} × 8–12 · ? · RIR ${im.rir}`,
+    note:'Carga sin calibrar: usa una carga que te deje aproximadamente el RIR indicado y guárdala después en el repositorio.'
+  };
 
   const isCompound=e.type==='Compuesto';
 
-
-  if(
-    im.heavy &&
-    isCompound &&
-    e.priority>=3
-  ){
-
-    const base=
-      Math.max(
-        1,
-        im.sets-1
-      );
-
-    const reps=
-      intensity==='Muy alta'
-        ? 7
-        : 8;
-
-    const heavyReps=
-      intensity==='Muy alta'
-        ? 5
-        : 6;
-
-    const heavy=
-      Number(load)+Number(e.inc);
-
-
-    return {
-
-      text:
-        `${base} × ${reps} · ${fmtLoad(load)} ${e.unit} · RIR 2  |  1 × ${heavyReps} · ${fmtLoad(heavy)} ${e.unit} · RIR 1`,
-
-      note:
-        'Serie pesada final: sube solo el incremento previsto y mantén la técnica del movimiento.'
-
+  if(im.heavy&&isCompound&&e.priority>=3){
+    const base=Math.max(1,im.sets-1);
+    const reps=intensity==='Muy alta'?7:8;
+    const heavyReps=intensity==='Muy alta'?5:6;
+    const heavy=Number(load)+Number(e.inc);
+    return{
+      text:`${base} × ${reps} · ${fmtLoad(load)} ${e.unit} · RIR 2  |  1 × ${heavyReps} · ${fmtLoad(heavy)} ${e.unit} · RIR 1`,
+      note:'Serie pesada final: sube solo el incremento previsto y mantén la técnica del movimiento.'
     };
-
   }
 
+  let reps=e.type==='Core'?12:(e.type==='Aislamiento'?10:8);
+  if(intensity==='Muy baja')reps=e.type==='Core'?12:10;
+  if(intensity==='Baja')reps=e.type==='Core'?12:10;
+  if(intensity==='Muy alta'&&e.type==='Aislamiento')reps=8;
 
-  let reps=
-    e.type==='Core'
-      ? 12
-      : (e.type==='Aislamiento'
-          ? 10
-          : 8);
-
-
-  if(intensity==='Muy baja'){
-    reps=e.type==='Core'?12:10;
-  }
-
-  if(intensity==='Baja'){
-    reps=e.type==='Core'?12:10;
-  }
-
-  if(
-    intensity==='Muy alta' &&
-    e.type==='Aislamiento'
-  ){
-    reps=8;
-  }
-
-
-  return {
-
-    text:
-      `${im.sets} × ${reps} · ${fmtLoad(load)} ${e.unit} · RIR ${im.rir}`,
-
-    note:''
-  };
-
+  return{text:`${im.sets} × ${reps} · ${fmtLoad(load)} ${e.unit} · RIR ${im.rir}`,note:''};
 }
-
-
-function generate(){
-
-  const type=
-    document.getElementById('type').value;
-
-  const duration=
-    Number(
-      document.getElementById('duration').value
-    );
-
-  const intensity=
-    document.getElementById('intensity').value;
-
-
-  const exs=
-    chooseExercises(
-      type,
-      duration
-    );
-
-  lastPlan=exs;
-
-
-  const out=
-    document.getElementById('output');
-
-
-  out.innerHTML=`
-
-    <div class="panel">
-
-      <div class="summary">
-
-        <span class="pill">
-          ${type}
-        </span>
-
-        <span class="pill">
-          ${duration} min
-        </span>
-
-        <span class="pill">
-          ${intensity}
-        </span>
-
-      </div>
-
-      <h2>Entrenamiento</h2>
-
-      ${exs.map((e,i)=>{
-
-        const p=setPlanFor(
-          e,
-          intensity
-        );
-
-        return `
-
-          <div class="exercise">
-
-            <div class="ex-head">
-
-              <div>
-
-                <div class="ex-name">
-                  ${i+1}. ${e.name}
-                </div>
-
-                <div class="ex-meta">
-                  ${e.group} · ${e.type}
-                </div>
-
-              </div>
-
-              <button
-                class="secondary"
-                onclick="swapExercise(${i})"
-              >
-                ↻ Ver otra opción
-              </button>
-
-            </div>
-
-            <div class="sets">
-              ${p.text}
-            </div>
-
-            <div class="rest">
-              Descanso:
-              ${restFor(e,intensity)}
-            </div>
-
-            <div class="cue">
-              ${e.cue}
-            </div>
-
-            ${
-              p.note
-                ? `<div
-                    class="hint"
-                    style="margin-top:7px"
-                  >
-                    ${p.note}
-                  </div>`
-                : ''
-            }
-
-          </div>
-
-        `;
-
-      }).join('')}
-
-    </div>
-
-  `;
-
-}
-
 
 function restFor(e,intensity){
-
-  if(e.type==='Compuesto'){
-
-    return intensity==='Muy alta'
-      ? '3:00–4:00 min'
-      : '2:00–3:00 min';
-
-  }
-
-  if(e.type==='Core'){
-    return '60–90 s';
-  }
-
-  return intensity==='Muy alta'
-    ? '90–120 s'
-    : '60–90 s';
-
+  if(e.type==='Compuesto')return intensity==='Muy alta'?'3:00–4:00 min':'2:00–3:00 min';
+  if(e.type==='Core')return '60–90 s';
+  return intensity==='Muy alta'?'90–120 s':'60–90 s';
 }
 
-
-function swapExercise(i){
-
-  const old=lastPlan[i];
-
-  const candidates=
-    repo.filter(
-      e =>
-        e.group===old.group &&
-        e.name!==old.name &&
-        (old.alts||[]).includes(e.name)
-    );
-
-
-  const pool=
-    candidates.length
-      ? candidates
-      : repo.filter(
-          e =>
-            e.group===old.group &&
-            e.name!==old.name
-        );
-
-
-  if(!pool.length){
-    return;
-  }
-
-
-  const next=
-    pool[
-      Math.floor(
-        Math.random()*pool.length
-      )
-    ];
-
-
-  lastPlan[i]=next;
-
-  renderLast();
-
-}
-
-
-function renderLast(){
-
-  const type=
-    document.getElementById('type').value;
-
-  const duration=
-    Number(
-      document.getElementById('duration').value
-    );
-
-  const intensity=
-    document.getElementById('intensity').value;
-
-  const out=
-    document.getElementById('output');
-
-
-  out.innerHTML=`
-
-    <div class="panel">
-
-      <div class="summary">
-
-        <span class="pill">
-          ${type}
-        </span>
-
-        <span class="pill">
-          ${duration} min
-        </span>
-
-        <span class="pill">
-          ${intensity}
-        </span>
-
-      </div>
-
-      <h2>Entrenamiento</h2>
-
-      ${lastPlan.map((e,i)=>{
-
-        const p=
-          setPlanFor(
-            e,
-            intensity
-          );
-
-        return `
-
-          <div class="exercise">
-
-            <div class="ex-head">
-
-              <div>
-
-                <div class="ex-name">
-                  ${i+1}. ${e.name}
-                </div>
-
-                <div class="ex-meta">
-                  ${e.group} · ${e.type}
-                </div>
-
-              </div>
-
-              <button
-                class="secondary"
-                onclick="swapExercise(${i})"
-              >
-                ↻ Ver otra opción
-              </button>
-
-            </div>
-
-            <div class="sets">
-              ${p.text}
-            </div>
-
-            <div class="rest">
-              Descanso:
-              ${restFor(e,intensity)}
-            </div>
-
-            <div class="cue">
-              ${e.cue}
-            </div>
-
-            ${
-              p.note
-                ? `<div
-                    class="hint"
-                    style="margin-top:7px"
-                  >
-                    ${p.note}
-                  </div>`
-                : ''
-            }
-
-          </div>
-
-        `;
-
-      }).join('')}
-
+function exerciseHtml(e,i,intensity){
+  const p=setPlanFor(e,intensity);
+  const swap=hasAlternative(i)?`<button class="secondary" onclick="swapExercise(${i})">↻ Ver otra opción</button>`:'';
+  return `<div class="exercise">
+    <div class="ex-head">
+      <div><div class="ex-name">${i+1}. ${esc(e.name)}</div><div class="ex-meta">${esc(e.group)} · ${esc(e.type)}</div></div>
+      ${swap}
     </div>
-
-  `;
-
+    <div class="sets">${p.text}</div>
+    <div class="rest">Descanso: ${restFor(e,intensity)}</div>
+    <div class="cue">${esc(e.cue)}</div>
+    ${p.note?`<div class="hint" style="margin-top:7px">${esc(p.note)}</div>`:''}
+  </div>`;
 }
 
-
-function renderRepo(){
-
-  const el=
-    document.getElementById('repoTable');
-
-
-  el.innerHTML=
-
-    `<div class="repo-row repo-head">
-
-      <div>Ejercicio</div>
-      <div>Carga RIR 2</div>
-      <div>Unidad</div>
-      <div>Incremento</div>
-      <div>Grupo / tipo</div>
-      <div></div>
-
-    </div>`
-
-    +
-
-    repo.map((e,i)=>`
-
-      <div class="repo-row">
-
-        <div class="wide">
-          <input
-            value="${esc(e.name)}"
-            onchange="upd(${i},'name',this.value)"
-          >
-        </div>
-
-        <div>
-          <input
-            value="${e.load}"
-            placeholder="?"
-            onchange="updNum(${i},'load',this.value)"
-          >
-        </div>
-
-        <div>
-          <input
-            value="${esc(e.unit)}"
-            onchange="upd(${i},'unit',this.value)"
-          >
-        </div>
-
-        <div>
-          <input
-            value="${e.inc}"
-            onchange="updNum(${i},'inc',this.value)"
-          >
-        </div>
-
-        <div>
-
-          <select
-            onchange="upd(${i},'group',this.value)"
-          >
-
-            ${
-              [
-                'Piernas',
-                'Pecho',
-                'Tríceps',
-                'Espalda',
-                'Bíceps',
-                'Hombros',
-                'Core'
-              ]
-              .map(g=>`
-
-                <option
-                  ${e.group===g?'selected':''}
-                >
-                  ${g}
-                </option>
-
-              `)
-              .join('')
-            }
-
-          </select>
-
-          <select
-            onchange="upd(${i},'type',this.value)"
-          >
-
-            <option
-              ${e.type==='Compuesto'?'selected':''}
-            >
-              Compuesto
-            </option>
-
-            <option
-              ${e.type==='Aislamiento'?'selected':''}
-            >
-              Aislamiento
-            </option>
-
-            <option
-              ${e.type==='Core'?'selected':''}
-            >
-              Core
-            </option>
-
-          </select>
-
-        </div>
-
-        <button
-          class="secondary danger"
-          onclick="delExercise(${i})"
-        >
-          Eliminar
-        </button>
-
-      </div>
-
-    `).join('');
-
+function renderTraining(){
+  const type=document.getElementById('type').value;
+  const duration=Number(document.getElementById('duration').value);
+  const intensity=document.getElementById('intensity').value;
+  document.getElementById('output').innerHTML=`<div class="panel">
+    <div class="summary"><span class="pill">${esc(type)}</span><span class="pill">${duration} min</span><span class="pill">${esc(intensity)}</span></div>
+    <h2>Entrenamiento</h2>
+    ${lastPlan.map((e,i)=>exerciseHtml(e,i,intensity)).join('')}
+  </div>`;
 }
 
+function generate(){
+  const type=document.getElementById('type').value;
+  const duration=Number(document.getElementById('duration').value);
+  lastPlan=chooseExercises(type,duration);
+  renderTraining();
+}
+
+function renderLast(){renderTraining();}
 
 function esc(s){
-
-  return String(s??'')
-    .replaceAll('&','&amp;')
-    .replaceAll('"','&quot;')
-    .replaceAll('<','&lt;')
-    .replaceAll('>','&gt;');
-
+  return String(s??'').replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;');
 }
 
+function renderTags(tags){return (tags||[]).map(t=>`<span class="repo-tag">${esc(t)}</span>`).join('');}
 
-function upd(i,k,v){
+function renderTags(tags){return (tags||[]).map(t=>`<span class="repo-tag">${esc(t)}</span>`).join('');}
 
-  repo[i][k]=v;
+function repoMatchesSearch(e,query){
+  if(!query)return true;
+  const haystack=[e.name,e.group,e.type,...(e.tags||[])].join(' ').toLowerCase();
+  return haystack.includes(query.toLowerCase());
+}
+
+function renderRepoCard(e,i){
+  if(editingIndex!==i){
+    return `<div class="repo-card" data-index="${i}">
+      <div class="repo-card-top">
+        <div><div class="repo-card-name">${esc(e.name)}</div><div class="repo-card-meta">${esc(e.group)} · ${esc(e.type)}</div></div>
+        <div class="repo-card-actions"><button class="icon-btn" title="Editar ejercicio" onclick="editExercise(${i})">✎</button></div>
+      </div>
+      <div class="repo-info-row">${renderTags(e.tags)}</div>
+      <div class="repo-info-row">
+        <span class="repo-stat">Carga RIR 2: ${esc(e.load)} ${esc(e.unit)}</span>
+        <span class="repo-stat">Incremento: ${esc(e.inc)} ${esc(e.unit)}</span>
+      </div>
+    </div>`;
+  }
+
+  return `<div class="repo-card" data-index="${i}">
+    <div class="repo-card-top">
+      <div><div class="repo-card-name">Editando ejercicio</div><div class="repo-card-meta">Los cambios no se aplican hasta pulsar Guardar.</div></div>
+    </div>
+    <div class="repo-edit">
+      <div class="edit-grid">
+        <div class="edit-field full"><label>Ejercicio</label><input id="edit-name-${i}" value="${esc(e.name)}"></div>
+        <div class="edit-field"><label>Grupo</label><select id="edit-group-${i}">${ALL_GROUPS.map(g=>`<option ${e.group===g?'selected':''}>${g}</option>`).join('')}</select></div>
+        <div class="edit-field"><label>Tipo</label><select id="edit-type-${i}">${['Compuesto','Aislamiento','Core'].map(t=>`<option ${e.type===t?'selected':''}>${t}</option>`).join('')}</select></div>
+        <div class="edit-field"><label>Carga RIR 2</label><input id="edit-load-${i}" value="${esc(e.load)}"></div>
+        <div class="edit-field"><label>Unidad</label><input id="edit-unit-${i}" value="${esc(e.unit)}"></div>
+        <div class="edit-field"><label>Incremento</label><input id="edit-inc-${i}" value="${esc(e.inc)}"></div>
+        <div class="edit-field full"><label>Indicaciones técnicas</label><input id="edit-cue-${i}" value="${esc(e.cue)}"></div>
+      </div>
+
+      <div class="edit-field" style="margin-top:11px">
+        <label>Músculos / tags</label>
+        <div class="tag-editor">${ALL_TAGS.map(tag=>`<button type="button" class="tag-option ${e.tags.includes(tag)?'selected':''}" onclick="toggleEditTag(${i},${JSON.stringify(tag)})">${esc(tag)}</button>`).join('')}</div>
+      </div>
+
+      <div class="edit-actions">
+        <button class="primary" onclick="saveExercise(${i})">Guardar</button>
+        <button class="secondary" onclick="cancelEdit()">Cancelar</button>
+        <button class="secondary danger" onclick="deleteFromEdit(${i})">Eliminar</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderRepo(){
+  const searchEl=document.getElementById('repoSearch');
+  const query=searchEl?searchEl.value.trim():'';
+  const filtered=repo.filter(e=>repoMatchesSearch(e,query));
+  const count=document.getElementById('repoCount');
+  if(count)count.textContent=query?`${filtered.length} ejercicio${filtered.length===1?'':'s'} encontrado${filtered.length===1?'':'s'}`:`${repo.length} ejercicios en el repositorio`;
+  document.getElementById('repoTable').innerHTML=filtered.length
+    ? `<div class="repo-list">${filtered.map(e=>renderRepoCard(e,repo.indexOf(e))).join('')}</div>`
+    : `<div class="repo-empty">No hay ejercicios que coincidan con “${esc(query)}”.</div>`;
+}
+
+function getRepoCard(i){
+  return document.querySelector(`.repo-card[data-index="${i}"]`);
+}
+
+function editExercise(i){
+  editingIndex=i;
+  renderRepo();
+  requestAnimationFrame(()=>{
+    const card=getRepoCard(i);
+    if(card)card.scrollIntoView({behavior:'smooth',block:'center'});
+  });
+}
+
+function cancelEdit(){editingIndex=null;renderRepo();}
+
+function toggleEditTag(i,tag){
+  const card=getRepoCard(i);
+  if(!card)return;
+  const target=[...card.querySelectorAll('.tag-option')].find(b=>b.textContent.trim()===tag);
+  if(target)target.classList.toggle('selected');
+}
+
+function getEditedTags(i){
+  const card=getRepoCard(i);
+  return card?[...card.querySelectorAll('.tag-option.selected')].map(b=>b.textContent.trim()):[];
+}
+
+function saveExercise(i){
+  const loadRaw=document.getElementById(`edit-load-${i}`).value.trim();
+  const incRaw=document.getElementById(`edit-inc-${i}`).value.trim();
+  const tags=getEditedTags(i);
+
+  if(!tags.length){alert('Selecciona al menos un tag muscular.');return;}
+
+  repo[i].name=document.getElementById(`edit-name-${i}`).value.trim()||'Nuevo ejercicio';
+  repo[i].group=document.getElementById(`edit-group-${i}`).value;
+  repo[i].type=document.getElementById(`edit-type-${i}`).value;
+  repo[i].load=loadRaw==='?'?'?':Number(loadRaw);
+  repo[i].unit=document.getElementById(`edit-unit-${i}`).value.trim()||'kg';
+  repo[i].inc=incRaw===''?2.5:Number(incRaw);
+  repo[i].cue=document.getElementById(`edit-cue-${i}`).value.trim()||'Añade aquí una indicación técnica breve y específica.';
+  repo[i].tags=tags;
 
   save();
-
+  editingIndex=null;
+  renderRepo();
 }
 
-
-function updNum(i,k,v){
-
-  repo[i][k]=
-    v.trim()==='?'
-      ? '?'
-      : Number(v);
-
+function deleteFromEdit(i){
+  const exercise=repo[i];
+  if(!exercise)return;
+  if(!window.confirm(`¿Eliminar "${exercise.name}" del repositorio?`))return;
+  repo.splice(i,1);
+  editingIndex=null;
   save();
-
+  renderRepo();
 }
-
 
 function addExercise(){
-
   repo.push({
-
     name:'Nuevo ejercicio',
     group:'Pecho',
     type:'Aislamiento',
@@ -1875,182 +1389,48 @@ function addExercise(){
     unit:'kg',
     inc:2.5,
     priority:1,
-    cue:
-      'Añade aquí una indicación técnica breve y específica.',
-    alts:[]
-
+    tags:['Pectoral'],
+    cue:'Añade aquí una indicación técnica breve y específica.'
   });
-
+  editingIndex=repo.length-1;
   save();
-
   renderRepo();
-
+  requestAnimationFrame(()=>{
+    const cards=document.querySelectorAll('.repo-card');
+    if(cards.length)cards[cards.length-1].scrollIntoView({behavior:'smooth',block:'center'});
+  });
 }
-
-
-function delExercise(i){
-
-  if(
-    confirm(
-      '¿Eliminar este ejercicio?'
-    )
-  ){
-
-    repo.splice(i,1);
-
-    save();
-
-    renderRepo();
-
-  }
-
-}
-
 
 function resetRepo(){
-
-  if(
-    confirm(
-      '¿Restaurar todas las cargas y ejercicios iniciales?'
-    )
-  ){
-
-    repo=
-      structuredClone(
-        initialRepo
-      );
-
+  if(confirm('¿Restaurar todas las cargas, tags y ejercicios iniciales?')){
+    repo=structuredClone(initialRepo);
+    editingIndex=null;
     save();
-
     renderRepo();
-
   }
-
 }
 
-
-function exportRepo(){
-
-  const blob=
-    new Blob(
-      [
-        JSON.stringify(
-          repo,
-          null,
-          2
-        )
-      ],
-      {
-        type:'application/json'
-      }
-    );
-
-  const a=
-    document.createElement('a');
-
-  a.href=
-    URL.createObjectURL(blob);
-
-  a.download=
-    'repositorio-gimnasio.json';
-
-  a.click();
-
-  URL.revokeObjectURL(
-    a.href
-  );
-
-}
-
-
-function importRepo(ev){
-
-  const f=
-    ev.target.files[0];
-
-  if(!f){
-    return;
-  }
-
-
-  const r=
-    new FileReader();
-
-
-  r.onload=()=>{
-
-    try{
-
-      repo=
-        JSON.parse(
-          r.result
-        );
-
-      save();
-
-      renderRepo();
-
-      alert(
-        'Repositorio importado correctamente.'
-      );
-
-    }catch(e){
-
-      alert(
-        'Archivo no válido.'
-      );
-
-    }
-
-  };
-
-
-  r.readAsText(f);
-
-}
-
-
-renderRepo();
-
-</script>
-
-
-
-
-
-<script>
-/* Manifest PWA integrado en este mismo HTML. No requiere manifest.json. */
-const manifest = {
-  name: "Gimnasio — Planificador de hipertrofia",
-  short_name: "Gimnasio",
-  start_url: ".",
-  display: "standalone",
-  background_color: "#090b0f",
-  theme_color: "#090b0f",
-  icons: [
-    {
-      src: "https://cdn-icons-png.flaticon.com/512/2964/2964514.png",
-      sizes: "192x192",
-      type: "image/png"
-    },
-    {
-      src: "https://cdn-icons-png.flaticon.com/512/2964/2964514.png",
-      sizes: "512x512",
-      type: "image/png"
-    }
+/* Mantiene el manifest embebido que ya utilizabas. */
+const manifest={
+  name:"Gimnasio — Planificador de hipertrofia",
+  short_name:"Gimnasio",
+  start_url:".",
+  display:"standalone",
+  background_color:"#090b0f",
+  theme_color:"#090b0f",
+  icons:[
+    {src:"https://cdn-icons-png.flaticon.com/512/2964/2964514.png",sizes:"192x192",type:"image/png"},
+    {src:"https://cdn-icons-png.flaticon.com/512/2964/2964514.png",sizes:"512x512",type:"image/png"}
   ]
 };
-
-const manifestBlob = new Blob(
-  [JSON.stringify(manifest)],
-  { type: "application/manifest+json" }
-);
-const manifestURL = URL.createObjectURL(manifestBlob);
-const manifestLink = document.createElement("link");
-manifestLink.rel = "manifest";
-manifestLink.href = manifestURL;
+const manifestBlob=new Blob([JSON.stringify(manifest)],{type:"application/manifest+json"});
+const manifestURL=URL.createObjectURL(manifestBlob);
+const manifestLink=document.createElement("link");
+manifestLink.rel="manifest";
+manifestLink.href=manifestURL;
 document.head.appendChild(manifestLink);
-</script>
 
+renderRepo();
+</script>
 </body>
 </html>
