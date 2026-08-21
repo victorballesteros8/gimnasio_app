@@ -870,7 +870,7 @@ li::marker{
 .edit-field input,.edit-field select{width:100%;min-height:42px;padding:9px 10px;color:var(--text);background:var(--bg2);border:1px solid var(--line);border-radius:10px;outline:none;font-size:13px}
 .edit-field input:focus,.edit-field select:focus{border-color:rgba(184,243,75,.55);box-shadow:0 0 0 3px rgba(184,243,75,.06)}
 .tag-editor{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
-.tag-option{border:1px solid var(--line);background:var(--bg2);color:#aeb5c0;border-radius:999px;padding:7px 9px;font-size:10px;font-weight:800;cursor:pointer}
+.tag-option{position:relative;z-index:5;appearance:none;-webkit-appearance:none;border:1px solid var(--line);background:var(--bg2);color:#aeb5c0;border-radius:999px;padding:8px 10px;font-size:10px;font-weight:800;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-tap-highlight-color:transparent}
 .tag-option.selected{background:var(--accent-soft);color:var(--accent);border-color:var(--accent-border)}
 .edit-actions{display:flex;gap:7px;margin-top:11px}
 .edit-actions .secondary,.edit-actions .primary{flex:1}
@@ -1044,6 +1044,7 @@ repo=normalizeRepo(repo);
 
 let lastPlan=[];
 let editingIndex=null;
+let editingTags=[];
 
 const intensityMap={
   'Muy baja':{sets:2,rir:3,heavy:false,exerciseFactor:.62},
@@ -1299,7 +1300,7 @@ function renderRepoCard(e,i){
 
       <div class="edit-field" style="margin-top:11px">
         <label>Músculos / tags</label>
-        <div class="tag-editor">${ALL_TAGS.map(tag=>`<button type="button" class="tag-option ${editingTags.includes(tag)?'selected':''}" onclick="toggleEditTag(${i},${JSON.stringify(tag)})">${esc(tag)}</button>`).join('')}</div>
+        <div class="tag-editor" data-tag-editor="${i}">${ALL_TAGS.map(tag=>`<button type="button" class="tag-option ${editingTags.includes(tag)?'selected':''}" data-tag-index="${i}" data-tag="${esc(tag)}">${esc(tag)}</button>`).join('')}</div>
       </div>
 
       <div class="edit-actions">
@@ -1338,13 +1339,29 @@ function editExercise(i){
 
 function cancelEdit(){editingIndex=null;editingTags=[];renderRepo();}
 
-function toggleEditTag(i,tag){
+function toggleEditTag(i,tag,button){
   if(editingIndex!==i)return;
   const pos=editingTags.indexOf(tag);
-  if(pos===-1) editingTags.push(tag);
-  else editingTags.splice(pos,1);
-  renderRepo();
+  if(pos===-1){
+    editingTags.push(tag);
+    if(button)button.classList.add('selected');
+  }else{
+    editingTags.splice(pos,1);
+    if(button)button.classList.remove('selected');
+  }
 }
+
+// Delegación de eventos: los tags no dependen de onclick inline, por lo que funcionan
+// correctamente también en Chrome móvil y aunque el repositorio se haya renderizado de nuevo.
+document.addEventListener('click',function(ev){
+  const button=ev.target.closest('#repoTable .tag-option');
+  if(!button)return;
+  ev.preventDefault();
+  ev.stopPropagation();
+  const i=Number(button.dataset.tagIndex);
+  const tag=button.dataset.tag;
+  toggleEditTag(i,tag,button);
+});
 
 function getEditedTags(i){
   return editingIndex===i?[...editingTags]:[...(repo[i]?.tags||[])];
