@@ -1226,12 +1226,18 @@ async function initRepoDB(){
 }
 
 async function save(){
-  if(!db)return;
+  if(!db){
+    console.error('IndexedDB todavía no está disponible.');
+    return false;
+  }
+
   try{
     await writeAllExercises(repo);
+    return true;
   }catch(error){
     console.error('Error guardando repositorio:',error);
     alert('No se pudo guardar el repositorio en el almacenamiento local.');
+    return false;
   }
 }
 
@@ -1832,7 +1838,7 @@ function getEditedTags(i){
   return editingIndex===i?[...editingTags]:[...(repo[i]?.tags||[])];
 }
 
-function saveExercise(i){
+async function saveExercise(i){
   const loadRaw=document.getElementById(`edit-load-${i}`).value.trim();
   const incRaw=document.getElementById(`edit-inc-${i}`).value.trim();
   const tags=getEditedTags(i);
@@ -1849,24 +1855,24 @@ function saveExercise(i){
   repo[i].cue=document.getElementById(`edit-cue-${i}`).value.trim()||'Añade aquí una indicación técnica breve y específica.';
   repo[i].tags=tags;
 
-  save();
+  await save();
   editingIndex=null;
   editingTags=[];
   renderRepo();
 }
 
-function deleteFromEdit(i){
+async function deleteFromEdit(i){
   const exercise=repo[i];
   if(!exercise)return;
   if(!window.confirm(`¿Eliminar "${exercise.name}" del repositorio?`))return;
   repo.splice(i,1);
   editingIndex=null;
   editingTags=[];
-  save();
+  await save();
   renderRepo();
 }
 
-function addExercise(){
+async function addExercise(){
   repo.push({
     name:'Nuevo ejercicio',
     group:'Pecho',
@@ -1880,7 +1886,7 @@ function addExercise(){
   });
   editingIndex=repo.length-1;
   editingTags=[...(repo[editingIndex].tags||[])];
-  save();
+  await save();
   renderRepo();
   requestAnimationFrame(()=>{
     const cards=document.querySelectorAll('.repo-card');
