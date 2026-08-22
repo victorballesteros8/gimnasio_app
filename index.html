@@ -245,6 +245,25 @@ main{
   box-shadow:var(--shadow);
 }
 
+.repo-panel{
+  overflow:visible;
+}
+
+.repo-search{
+  position:relative;
+  z-index:1000;
+}
+
+.tag-filter-wrap{
+  position:relative;
+  z-index:2000;
+}
+
+.tag-filter-menu{
+  position:absolute;
+  z-index:99999;
+}
+
 .panel::after{
   content:"";
   position:absolute;
@@ -864,6 +883,16 @@ li::marker{
 .repo-info-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
 .repo-tag{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;background:var(--accent-soft);border:1px solid var(--accent-border);color:var(--accent);font-size:10px;font-weight:800}
 .repo-stat{color:var(--muted);font-size:11px;padding:5px 8px;border-radius:999px;background:var(--bg2);border:1px solid var(--line)}
+.priority-badge{width:30px;height:30px;display:grid;place-items:center;border-radius:50%;font-size:12px;font-weight:950;border:1px solid var(--line);background:var(--bg2);color:var(--muted);flex:none}
+.priority-badge.a{background:rgba(126,217,87,.14);border-color:rgba(126,217,87,.38);color:#8fe06b}
+.priority-badge.b{background:rgba(184,243,75,.16);border-color:rgba(184,243,75,.45);color:var(--accent)}
+.priority-badge.c{background:rgba(244,201,93,.14);border-color:rgba(244,201,93,.38);color:#f4c95d}
+.priority-badge.d{background:rgba(245,158,11,.14);border-color:rgba(245,158,11,.38);color:#f6ad3d}
+.priority-badge.e{background:rgba(255,107,107,.08);border-color:rgba(255,107,107,.22);color:#ff8585}
+.priority-select{width:58px !important;min-width:58px !important;text-align:center;font-weight:950;font-size:16px !important}
+.repo-card-title-row{display:flex;align-items:center;gap:9px}
+.priority-help{margin-top:7px;color:var(--muted2);font-size:10px;line-height:1.4}
+
 .repo-edit{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
 .edit-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:9px}
 .edit-field label{display:block;color:var(--muted);font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.5px;margin:0 0 6px}
@@ -875,12 +904,23 @@ li::marker{
 .edit-actions{display:flex;gap:7px;margin-top:11px}
 .edit-actions .secondary,.edit-actions .primary{flex:1}
 .repo-note{margin:0 0 12px;color:var(--muted);font-size:12px;line-height:1.5}
-.repo-search{position:relative;margin-top:12px;z-index:2}
+.repo-search{
+  position:relative;
+  margin-top:12px;
+  z-index:10;
+}
 .repo-search input{width:100%;min-height:46px;padding:12px 14px 12px 40px;color:var(--text);background:var(--bg2);border:1px solid var(--line);border-radius:13px;outline:none;font-size:14px}
 .repo-search input:focus{border-color:rgba(184,243,75,.55);box-shadow:0 0 0 3px rgba(184,243,75,.06)}
 .repo-search::before{content:"⌕";position:absolute;left:14px;top:10px;color:var(--muted);font-size:20px;line-height:24px;pointer-events:none}
 .repo-empty{padding:25px 14px;text-align:center;color:var(--muted);font-size:13px;border:1px dashed var(--line);border-radius:15px;background:var(--bg2)}
 .repo-count{margin-top:8px;color:var(--muted2);font-size:10px;font-weight:700}
+.repo-filters{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:9px}
+.repo-filters select{width:100%;min-height:42px;padding:9px 11px;color:var(--text);background:var(--bg2);border:1px solid var(--line);border-radius:11px;outline:none;font-size:12px;font-weight:700}
+.repo-filters select:focus{border-color:rgba(184,243,75,.55);box-shadow:0 0 0 3px rgba(184,243,75,.06)}.tag-filter-wrap{position:relative;min-width:0}.filter-select{width:100%;min-height:42px;padding:9px 11px;color:var(--text);background:var(--bg2);border:1px solid var(--line);border-radius:11px;outline:none;font-size:12px;font-weight:700;text-align:left;display:flex;align-items:center;justify-content:space-between;cursor:pointer}.filter-select:focus{border-color:rgba(184,243,75,.55);box-shadow:0 0 0 3px rgba(184,243,75,.06)}.tag-filter-menu{position:absolute;z-index:50;top:calc(100% + 6px);left:0;right:0;min-width:220px;max-height:280px;overflow:auto;padding:7px;background:#151922;border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 35px #0008}.hidden-filter{display:none}.tag-filter-all{width:100%;border:0;background:transparent;color:var(--text);padding:9px 10px;text-align:left;border-radius:8px;font-weight:800;font-size:12px;cursor:pointer}.tag-filter-all:hover{background:var(--bg2)}.tag-filter-option{display:flex;align-items:center;gap:9px;padding:8px 10px;color:var(--muted);font-size:12px;font-weight:700;border-radius:8px;cursor:pointer}.tag-filter-option:hover{background:var(--bg2);color:var(--text)}.tag-filter-option input{accent-color:#b8f34b;width:16px;height:16px;margin:0}
+.repo-count-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:7px}
+.filter-reset{border:0;background:none;color:var(--accent);font-size:11px;font-weight:800;padding:4px 0;cursor:pointer;visibility:hidden}
+@media(max-width:560px){.repo-filters{grid-template-columns:1fr}}
+
 @media(max-width:760px){.edit-grid{grid-template-columns:1fr 1fr}.edit-grid .full{grid-column:1/-1}.edit-actions{flex-direction:column}}
 
 </style>
@@ -966,12 +1006,28 @@ li::marker{
 
 
 <section id="repo" class="hidden">
-<div class="panel">
+<div class="panel repo-panel">
 <h2>Repositorio de ejercicios</h2>
 <p class="repo-note">Los ejercicios están bloqueados para evitar cambios accidentales. Pulsa ✎ para editar uno. Los tags indican qué músculos o zonas trabaja y se usan para encontrar alternativas equivalentes.</p>
 <div class="repo-search">
   <input id="repoSearch" type="search" placeholder="Buscar ejercicio, músculo o grupo..." oninput="renderRepo()" autocomplete="off">
-  <div id="repoCount" class="repo-count"></div>
+  <div class="repo-filters">
+    <select id="repoGroupFilter" aria-label="Filtrar por grupo" onchange="renderRepo()">
+      <option value="">Todos los grupos</option>
+    </select>
+    <div class="tag-filter-wrap">
+      <button type="button" id="repoTagFilterButton" class="filter-select" onclick="toggleTagFilterMenu(event)" aria-haspopup="true" aria-expanded="false">Todos los tags <span>⌄</span></button>
+      <div id="repoTagFilterMenu" class="tag-filter-menu hidden-filter">
+        <button type="button" class="tag-filter-all" onclick="setAllTagFilters()">✓ Todos los tags</button>
+        <div id="repoTagFilterOptions"></div>
+      </div>
+    </div>
+    <select id="repoPriorityFilter" aria-label="Filtrar por prioridad" onchange="renderRepo()">
+      <option value="">Todas las prioridades</option>
+      <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option>
+    </select>
+  </div></div>
+  <div class="repo-count-row"><div id="repoCount" class="repo-count"></div><button type="button" class="filter-reset" onclick="resetRepoFilters()">Limpiar filtros</button></div>
 </div>
 <div class="actions">
 <button class="primary" onclick="addExercise()">＋ Añadir ejercicio</button>
@@ -1021,7 +1077,15 @@ li::marker{
       </li>
 
       <li>
-        Las alternativas se seleccionan por grupo y por músculos objetivo: deben compartir al menos un tag con el ejercicio actual y se priorizan las que coinciden en más músculos. Nunca se repite el mismo ejercicio dentro de una sesión.
+        La prioridad A–E solo se usa para la selección inicial: primero se respeta el reparto entre grupos y, dentro de cada grupo, se priorizan A, después B, C, D y E. Entre ejercicios con la misma letra se busca variedad de músculos mediante los tags.
+      </li>
+
+      <li>
+        Las alternativas de “Ver otra opción” no dependen de la prioridad: solo se ofrecen ejercicios del mismo grupo con exactamente el mismo perfil de tags y que no estén ya en la sesión.
+      </li>
+
+      <li>
+        Nunca se repite el mismo ejercicio dentro de una sesión.
       </li>
 
     </ul>
@@ -1034,12 +1098,47 @@ li::marker{
 
 
 <script>
-const ALL_GROUPS = ['Piernas','Pecho','Tríceps','Espalda','Bíceps','Hombros','Core'];
-const ALL_TAGS = ["Cuádriceps","Isquios","Glúteos","Gemelos","Pectoral","Pectoral superior","Pectoral inferior","Tríceps","Dorsal","Espalda media","Espalda alta","Bíceps","Braquial","Deltoide anterior","Deltoide lateral","Deltoide posterior","Trapecio","Core","Flexores de cadera"];
-const initialRepo = [{"name": "Prensa de piernas", "group": "Piernas", "type": "Compuesto", "load": 80, "unit": "kg", "inc": 5, "priority": 3, "tags": ["Cuádriceps", "Glúteos"], "cue": "Pies estables y rodillas siguiendo la línea de los pies; desciende con control sin perder la posición pélvica."}, {"name": "Sentadilla guiada en máquina", "group": "Piernas", "type": "Compuesto", "load": 50, "unit": "kg", "inc": 2.5, "priority": 3, "tags": ["Cuádriceps", "Glúteos"], "cue": "Apoya toda la planta y desciende hasta un rango cómodo manteniendo el tronco estable."}, {"name": "Extensión de cuádriceps", "group": "Piernas", "type": "Aislamiento", "load": 40, "unit": "kg", "inc": 5, "priority": 2, "tags": ["Cuádriceps"], "cue": "Ajusta el eje a la rodilla y extiende sin despegar la cadera del asiento."}, {"name": "Curl femoral sentado", "group": "Piernas", "type": "Aislamiento", "load": 36, "unit": "kg", "inc": 5, "priority": 2, "tags": ["Isquios"], "cue": "Mantén la cadera pegada al respaldo y lleva los talones hacia abajo sin rebote."}, {"name": "Peso muerto rumano", "group": "Piernas", "type": "Compuesto", "load": 60, "unit": "kg", "inc": 2.5, "priority": 3, "tags": ["Isquios", "Glúteos"], "cue": "Rodillas ligeramente flexionadas, cadera atrás y barra próxima a los muslos durante todo el recorrido."}, {"name": "Elevación de gemelo sentado", "group": "Piernas", "type": "Aislamiento", "load": 30, "unit": "kg", "inc": 5, "priority": 1, "tags": ["Gemelos"], "cue": "Baja el talón con control y busca una contracción completa sin rebotar."}, {"name": "Gemelo de pie en máquina", "group": "Piernas", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 5, "priority": 1, "tags": ["Gemelos"], "cue": "Mantén las piernas estables, baja el talón con control y busca una contracción completa sin rebote."}, {"name": "Hip thrust", "group": "Piernas", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": 2, "tags": ["Glúteos"], "cue": "Barbilla ligeramente hacia el pecho y pelvis neutra; termina extendiendo la cadera sin hiperextender la espalda."}, {"name": "Press banca", "group": "Pecho", "type": "Compuesto", "load": 50, "unit": "kg", "inc": 2.5, "priority": 3, "tags": ["Pectoral", "Tríceps"], "cue": "Pies firmes, escápulas retraídas y barra hacia la zona media-baja del pecho."}, {"name": "Press banca inclinado", "group": "Pecho", "type": "Compuesto", "load": 40, "unit": "kg", "inc": 2.5, "priority": 3, "tags": ["Pectoral superior", "Deltoide anterior", "Tríceps"], "cue": "Banco moderadamente inclinado y hombros atrás; baja las manos hacia la parte alta del pecho."}, {"name": "Aperturas con mancuernas tumbado", "group": "Pecho", "type": "Aislamiento", "load": 14, "unit": "kg/mancuerna", "inc": 1, "priority": 2, "tags": ["Pectoral"], "cue": "Codos suavemente flexionados y recorrido amplio sin perder el control en la posición estirada."}, {"name": "Press de pecho en máquina", "group": "Pecho", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": 2, "tags": ["Pectoral", "Tríceps"], "cue": "Ajusta el asiento para que las asas queden a la altura media del pecho y empuja sin elevar hombros."}, {"name": "Cruce de poleas", "group": "Pecho", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 2.5, "priority": 1, "tags": ["Pectoral"], "cue": "Mantén el tronco estable y aproxima los brazos al frente sin perder tensión pectoral."}, {"name": "Extensión de tríceps en polea", "group": "Tríceps", "type": "Aislamiento", "load": 20, "unit": "kg", "inc": 2.5, "priority": 2, "tags": ["Tríceps"], "cue": "Codos pegados al cuerpo y hombros quietos; extiende hasta bloquear cómodamente el codo."}, {"name": "Extensión de tríceps en polea baja unilateral", "group": "Tríceps", "type": "Aislamiento", "load": 5, "unit": "kg/mano", "inc": 1, "priority": 1, "tags": ["Tríceps"], "cue": "Codo estable y brazo alineado con el tronco; mueve solo el antebrazo."}, {"name": "Fondos de tríceps", "group": "Tríceps", "type": "Compuesto", "load": "?", "unit": "peso corporal", "inc": 2.5, "priority": 2, "tags": ["Tríceps", "Pectoral inferior"], "cue": "Tronco relativamente vertical y codos controlados; añade lastre solo cuando el peso corporal sea cómodo."}, {"name": "Press cerrado", "group": "Tríceps", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 2.5, "priority": 2, "tags": ["Tríceps", "Pectoral"], "cue": "Agarre ligeramente más cerrado que el press convencional y codos bajo control durante la bajada."}, {"name": "Jalón en máquina", "group": "Espalda", "type": "Compuesto", "load": 100, "unit": "kg", "inc": 5, "priority": 3, "tags": ["Dorsal", "Bíceps"], "cue": "Inicia el movimiento deprimiendo las escápulas y lleva el agarre hacia la parte alta del pecho sin balancearte."}, {"name": "Dominadas", "group": "Espalda", "type": "Compuesto", "load": "?", "unit": "peso corporal/lastre", "inc": 2.5, "priority": 3, "tags": ["Dorsal", "Bíceps"], "cue": "Inicia con escápulas activas y lleva el pecho hacia la barra manteniendo el tronco estable."}, {"name": "Remo con mancuerna en banco", "group": "Espalda", "type": "Compuesto", "load": 16, "unit": "kg/mancuerna", "inc": 2, "priority": 3, "tags": ["Espalda media", "Dorsal", "Bíceps"], "cue": "Espalda neutra y hombro lejos de la oreja; lleva el codo hacia la cadera."}, {"name": "Remo sentado en polea", "group": "Espalda", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": 2, "tags": ["Espalda media", "Dorsal", "Bíceps"], "cue": "Mantén el tronco estable y lleva los codos atrás sin convertirlo en un balanceo."}, {"name": "Remo con pecho apoyado", "group": "Espalda", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": 2, "tags": ["Espalda media", "Dorsal", "Bíceps"], "cue": "Pecho apoyado y hombros estables; tira con los codos y evita encogerlos hacia las orejas."}, {"name": "Curl martillo", "group": "Bíceps", "type": "Aislamiento", "load": 16, "unit": "kg/mancuerna", "inc": 1, "priority": 2, "tags": ["Bíceps", "Braquial"], "cue": "Muñeca neutra y codos junto al cuerpo; evita adelantar el hombro al subir."}, {"name": "Curl martillo en polea baja", "group": "Bíceps", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 2.5, "priority": 1, "tags": ["Bíceps", "Braquial"], "cue": "Mantén el codo estable y la muñeca neutra durante todo el recorrido."}, {"name": "Curl concentrado", "group": "Bíceps", "type": "Aislamiento", "load": 14, "unit": "kg/mancuerna", "inc": 1, "priority": 1, "tags": ["Bíceps"], "cue": "Apoya el brazo en el muslo y evita que el hombro avance al completar la flexión."}, {"name": "Curl barra EZ", "group": "Bíceps", "type": "Aislamiento", "load": 20, "unit": "kg + barra", "inc": 2.5, "priority": 2, "tags": ["Bíceps"], "cue": "Codos bajo el hombro y torso quieto; sube sin convertir el movimiento en un balanceo."}, {"name": "Curl predicador", "group": "Bíceps", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 2.5, "priority": 1, "tags": ["Bíceps"], "cue": "Mantén el brazo apoyado y no rebotes al llegar a la extensión."}, {"name": "Press militar de pie", "group": "Hombros", "type": "Compuesto", "load": 30, "unit": "kg", "inc": 2.5, "priority": 3, "tags": ["Deltoide anterior", "Tríceps"], "cue": "Glúteos y abdomen activos; barra cerca de la cara y cabeza atravesando la línea de brazos arriba."}, {"name": "Press de hombros en máquina", "group": "Hombros", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": 2, "tags": ["Deltoide anterior", "Tríceps"], "cue": "Espalda apoyada y muñecas neutras; empuja sin encoger los hombros al final."}, {"name": "Elevaciones laterales", "group": "Hombros", "type": "Aislamiento", "load": 5, "unit": "kg/mancuerna", "inc": 1, "priority": 2, "tags": ["Deltoide lateral"], "cue": "Codos ligeramente por encima de las manos y recorrido controlado hasta aproximadamente la altura del hombro."}, {"name": "Elevación lateral en polea", "group": "Hombros", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 1, "priority": 1, "tags": ["Deltoide lateral"], "cue": "Mantén tensión continua y eleva el brazo lateralmente sin inclinar el tronco."}, {"name": "Face pull", "group": "Hombros", "type": "Aislamiento", "load": 15, "unit": "kg", "inc": 2.5, "priority": 1, "tags": ["Deltoide posterior", "Espalda alta"], "cue": "Tira hacia la cara con codos altos y rota externamente manteniendo el tronco estable."}, {"name": "Encogimiento de hombros con mancuerna", "group": "Hombros", "type": "Aislamiento", "load": 20, "unit": "kg/mancuerna", "inc": 2, "priority": 1, "tags": ["Trapecio"], "cue": "Eleva los hombros verticalmente sin hacer círculos y pausa brevemente arriba."}, {"name": "Abdominales inclinados en banco", "group": "Core", "type": "Core", "load": 15, "unit": "kg", "inc": 2.5, "priority": 2, "tags": ["Core"], "cue": "Flexiona la columna de forma controlada sin tirar del cuello y vuelve sin rebote."}, {"name": "Abdominales colgado en barra", "group": "Core", "type": "Core", "load": "?", "unit": "peso corporal", "inc": 2.5, "priority": 1, "tags": ["Core", "Flexores de cadera"], "cue": "Inicia con retroversión pélvica y eleva las rodillas sin balancear el cuerpo."}, {"name": "Crunch en polea", "group": "Core", "type": "Core", "load": "?", "unit": "kg", "inc": 2.5, "priority": 2, "tags": ["Core"], "cue": "Flexiona el tronco acercando las costillas a la pelvis sin tirar de los brazos."}];
+const ALL_GROUPS = ['Bíceps','Core','Espalda','Hombros','Pecho','Piernas','Tríceps'];
+const ALL_TAGS = ["Bíceps","Braquial","Core","Cuádriceps","Deltoide anterior","Deltoide lateral","Deltoide posterior","Dorsal","Espalda alta","Espalda media","Flexores de cadera","Gemelos","Glúteos","Isquios","Pectoral","Pectoral inferior","Pectoral superior","Trapecio","Tríceps"];
+const initialRepo = [{"name": "Prensa de piernas", "group": "Piernas", "type": "Compuesto", "load": 175, "unit": "kg", "inc": 5, "priority": "A", "tags": ["Cuádriceps", "Glúteos"], "cue": "Pies estables y rodillas siguiendo la línea de los pies; desciende con control sin perder la posición pélvica."},
+{"name": "Sentadilla guiada en máquina", "group": "Piernas", "type": "Compuesto", "load": 50, "unit": "kg", "inc": 2.5, "priority": "A", "tags": ["Cuádriceps", "Glúteos"], "cue": "Apoya toda la planta y desciende hasta un rango cómodo manteniendo el tronco estable."},
+{"name": "Extensión de cuádriceps", "group": "Piernas", "type": "Aislamiento", "load": 40, "unit": "kg", "inc": 5, "priority": "B", "tags": ["Cuádriceps"], "cue": "Ajusta el eje a la rodilla y extiende sin despegar la cadera del asiento."},
+{"name": "Curl femoral sentado", "group": "Piernas", "type": "Aislamiento", "load": 36, "unit": "kg", "inc": 5, "priority": "B", "tags": ["Isquios"], "cue": "Mantén la cadera pegada al respaldo y lleva los talones hacia abajo sin rebote."},
+{"name": "Peso muerto rumano", "group": "Piernas", "type": "Compuesto", "load": 60, "unit": "kg", "inc": 2.5, "priority": "B", "tags": ["Isquios", "Glúteos"], "cue": "Rodillas ligeramente flexionadas, cadera atrás y barra próxima a los muslos durante todo el recorrido."},
+{"name": "Elevación de gemelo sentado", "group": "Piernas", "type": "Aislamiento", "load": 30, "unit": "kg", "inc": 5, "priority": "B", "tags": ["Gemelos"], "cue": "Baja el talón con control y busca una contracción completa sin rebotar."},
+{"name": "Gemelo de pie en máquina", "group": "Piernas", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 5, "priority": "C", "tags": ["Gemelos"], "cue": "Mantén las piernas estables, baja el talón con control y busca una contracción completa sin rebote."},
+{"name": "Hip thrust", "group": "Piernas", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": "E", "tags": ["Glúteos"], "cue": "Barbilla ligeramente hacia el pecho y pelvis neutra; termina extendiendo la cadera sin hiperextender la espalda."},
+{"name": "Press banca", "group": "Pecho", "type": "Compuesto", "load": 50, "unit": "kg", "inc": 2.5, "priority": "A", "tags": ["Pectoral", "Tríceps"], "cue": "Pies firmes, escápulas retraídas y barra hacia la zona media-baja del pecho."},
+{"name": "Press banca inclinado", "group": "Pecho", "type": "Compuesto", "load": 40, "unit": "kg", "inc": 2.5, "priority": "B", "tags": ["Pectoral superior", "Deltoide anterior", "Tríceps"], "cue": "Banco moderadamente inclinado y hombros atrás; baja las manos hacia la parte alta del pecho."},
+{"name": "Aperturas con mancuernas tumbado", "group": "Pecho", "type": "Aislamiento", "load": 14, "unit": "kg/mancuerna", "inc": 1, "priority": "B", "tags": ["Pectoral"], "cue": "Codos suavemente flexionados y recorrido amplio sin perder el control en la posición estirada."},
+{"name": "Press de pecho en máquina", "group": "Pecho", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": "C", "tags": ["Pectoral", "Tríceps"], "cue": "Ajusta el asiento para que las asas queden a la altura media del pecho y empuja sin elevar hombros."},
+{"name": "Cruce de poleas", "group": "Pecho", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 2.5, "priority": "D", "tags": ["Pectoral"], "cue": "Mantén el tronco estable y aproxima los brazos al frente sin perder tensión pectoral."},
+{"name": "Extensión de tríceps en polea", "group": "Tríceps", "type": "Aislamiento", "load": 20, "unit": "kg", "inc": 2.5, "priority": "A", "tags": ["Tríceps"], "cue": "Codos pegados al cuerpo y hombros quietos; extiende hasta bloquear cómodamente el codo."},
+{"name": "Extensión de tríceps en polea baja unilateral", "group": "Tríceps", "type": "Aislamiento", "load": 5, "unit": "kg/mano", "inc": 1, "priority": "B", "tags": ["Tríceps"], "cue": "Codo estable y brazo alineado con el tronco; mueve solo el antebrazo."},
+{"name": "Fondos de tríceps", "group": "Tríceps", "type": "Compuesto", "load": "?", "unit": "peso corporal", "inc": 2.5, "priority": "B", "tags": ["Tríceps", "Pectoral inferior"], "cue": "Tronco relativamente vertical y codos controlados; añade lastre solo cuando el peso corporal sea cómodo."},
+{"name": "Press cerrado", "group": "Tríceps", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 2.5, "priority": "D", "tags": ["Tríceps", "Pectoral"], "cue": "Agarre ligeramente más cerrado que el press convencional y codos bajo control durante la bajada."},
+{"name": "Jalón en máquina", "group": "Espalda", "type": "Compuesto", "load": 100, "unit": "kg", "inc": 5, "priority": "A", "tags": ["Dorsal", "Bíceps"], "cue": "Inicia el movimiento deprimiendo las escápulas y lleva el agarre hacia la parte alta del pecho sin balancearte."},
+{"name": "Dominadas", "group": "Espalda", "type": "Compuesto", "load": "?", "unit": "peso corporal/lastre", "inc": 2.5, "priority": "A", "tags": ["Dorsal", "Bíceps"], "cue": "Inicia con escápulas activas y lleva el pecho hacia la barra manteniendo el tronco estable."},
+{"name": "Remo con mancuerna en banco", "group": "Espalda", "type": "Compuesto", "load": 16, "unit": "kg/mancuerna", "inc": 2, "priority": "B", "tags": ["Espalda media", "Dorsal", "Bíceps"], "cue": "Espalda neutra y hombro lejos de la oreja; lleva el codo hacia la cadera."},
+{"name": "Remo sentado en polea", "group": "Espalda", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": "D", "tags": ["Espalda media", "Dorsal", "Bíceps"], "cue": "Mantén el tronco estable y lleva los codos atrás sin convertirlo en un balanceo."},
+{"name": "Remo con pecho apoyado", "group": "Espalda", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": "B", "tags": ["Espalda media", "Dorsal", "Bíceps"], "cue": "Pecho apoyado y hombros estables; tira con los codos y evita encogerlos hacia las orejas."},
+{"name": "Curl martillo", "group": "Bíceps", "type": "Aislamiento", "load": 16, "unit": "kg/mancuerna", "inc": 1, "priority": "A", "tags": ["Bíceps", "Braquial"], "cue": "Muñeca neutra y codos junto al cuerpo; evita adelantar el hombro al subir."},
+{"name": "Curl martillo en polea baja", "group": "Bíceps", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 2.5, "priority": "B", "tags": ["Bíceps", "Braquial"], "cue": "Mantén el codo estable y la muñeca neutra durante todo el recorrido."},
+{"name": "Curl concentrado", "group": "Bíceps", "type": "Aislamiento", "load": 14, "unit": "kg/mancuerna", "inc": 1, "priority": "A", "tags": ["Bíceps"], "cue": "Apoya el brazo en el muslo y evita que el hombro avance al completar la flexión."},
+{"name": "Curl barra EZ", "group": "Bíceps", "type": "Aislamiento", "load": 20, "unit": "kg + barra", "inc": 2.5, "priority": "B", "tags": ["Bíceps"], "cue": "Codos bajo el hombro y torso quieto; sube sin convertir el movimiento en un balanceo."},
+{"name": "Curl predicador", "group": "Bíceps", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 2.5, "priority": "C", "tags": ["Bíceps"], "cue": "Mantén el brazo apoyado y no rebotes al llegar a la extensión."},
+{"name": "Press militar de pie", "group": "Hombros", "type": "Compuesto", "load": 30, "unit": "kg", "inc": 2.5, "priority": "A", "tags": ["Deltoide anterior", "Tríceps"], "cue": "Glúteos y abdomen activos; barra cerca de la cara y cabeza atravesando la línea de brazos arriba."},
+{"name": "Press de hombros en máquina", "group": "Hombros", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": "C", "tags": ["Deltoide anterior", "Tríceps"], "cue": "Espalda apoyada y muñecas neutras; empuja sin encoger los hombros al final."},
+{"name": "Elevaciones laterales", "group": "Hombros", "type": "Aislamiento", "load": 5, "unit": "kg/mancuerna", "inc": 1, "priority": "C", "tags": ["Deltoide lateral"], "cue": "Codos ligeramente por encima de las manos y recorrido controlado hasta aproximadamente la altura del hombro."},
+{"name": "Elevación lateral en polea", "group": "Hombros", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 1, "priority": "A", "tags": ["Deltoide lateral"], "cue": "Mantén tensión continua y eleva el brazo lateralmente sin inclinar el tronco."},
+{"name": "Face pull", "group": "Hombros", "type": "Aislamiento", "load": 15, "unit": "kg", "inc": 2.5, "priority": "B", "tags": ["Deltoide posterior", "Espalda alta"], "cue": "Tira hacia la cara con codos altos y rota externamente manteniendo el tronco estable."},
+{"name": "Encogimiento de hombros con mancuerna", "group": "Hombros", "type": "Aislamiento", "load": 20, "unit": "kg/mancuerna", "inc": 2, "priority": "B", "tags": ["Trapecio"], "cue": "Eleva los hombros verticalmente sin hacer círculos y pausa brevemente arriba."},
+{"name": "Abdominales inclinados en banco", "group": "Core", "type": "Core", "load": 15, "unit": "kg", "inc": 2.5, "priority": "B", "tags": ["Core"], "cue": "Flexiona la columna de forma controlada sin tirar del cuello y vuelve sin rebote."},
+{"name": "Abdominales colgado en barra", "group": "Core", "type": "Core", "load": "?", "unit": "peso corporal", "inc": 2.5, "priority": "A", "tags": ["Core", "Flexores de cadera"], "cue": "Inicia con retroversión pélvica y eleva las rodillas sin balancear el cuerpo."},
+{"name": "Crunch en polea", "group": "Core", "type": "Core", "load": "?", "unit": "kg", "inc": 2.5, "priority": "D", "tags": ["Core"], "cue": "Flexiona el tronco acercando las costillas a la pelvis sin tirar de los brazos."}];
 
 let repo=JSON.parse(localStorage.getItem('gymRepo')||'null');
-if(!Array.isArray(repo)) repo=structuredClone(initialRepo);
+if(!Array.isArray(repo)) repo=normalizeRepo(structuredClone(initialRepo));
 repo=normalizeRepo(repo);
 
 let lastPlan=[];
@@ -1062,6 +1161,17 @@ const splitGroups={
   'Torso':['Pecho','Espalda','Hombros','Bíceps','Tríceps','Core']
 };
 
+function normalizePriority(value){
+  if(typeof value==='string' && /^[ABCDE]$/.test(value)) return value;
+  const n=Number(value);
+  if(n>=3)return 'A';
+  if(n===2)return 'B';
+  if(n===1)return 'C';
+  return 'C';
+}
+
+const PRIORITY_RANK={A:5,B:4,C:3,D:2,E:1};
+
 function normalizeRepo(list){
   return list.map(e=>({
     name:e.name||'Nuevo ejercicio',
@@ -1070,7 +1180,7 @@ function normalizeRepo(list){
     load:e.load??'?',
     unit:e.unit||'kg',
     inc:Number(e.inc)||2.5,
-    priority:Number(e.priority)||1,
+    priority:normalizePriority(e.priority),
     tags:Array.isArray(e.tags)&&e.tags.length?e.tags:inferTags(e),
     cue:e.cue||'Añade aquí una indicación técnica breve y específica.'
   }));
@@ -1115,81 +1225,125 @@ function sharedTags(a,b){
 */
 function pickForGroup(group,count,already=[]){
   const usedNames=new Set(already.map(e=>e.name));
-  const candidates=repo
-    .filter(e=>e.group===group&&!usedNames.has(e.name))
-    .sort((a,b)=>b.priority-a.priority);
+  const pool=repo.filter(e=>e.group===group&&!usedNames.has(e.name));
+  const selected=[];
+  const coveredTags=new Set();
 
-  return candidates.slice(0,count);
+  while(selected.length<count && pool.length){
+    const best=pool
+      .map(e=>{
+        const grade=PRIORITY_RANK[e.priority]||3;
+        const newTags=(e.tags||[]).filter(t=>!coveredTags.has(t)).length;
+        const totalTags=(e.tags||[]).length;
+        const compound=e.type==='Compuesto'?1:0;
+        return {e,grade,newTags,totalTags,compound};
+      })
+      .sort((a,b)=>
+        b.grade-a.grade ||
+        b.newTags-a.newTags ||
+        b.totalTags-a.totalTags ||
+        b.compound-a.compound
+      );
+
+    const choice=best[0];
+    selected.push(choice.e);
+    (choice.e.tags||[]).forEach(t=>coveredTags.add(t));
+    pool.splice(pool.indexOf(choice.e),1);
+  }
+
+  return selected;
 }
 
 function chooseExercises(type,duration){
-  const target=durationMap[duration],groups=groupsFor(type);
+  const target=durationMap[duration]||5;
+  const groups=groupsFor(type);
   let selected=[];
 
+  // Fullbody: primero cubrimos los grandes patrones y después completamos
+  // hasta el número exacto de ejercicios que corresponda a la duración.
   if(type==='Fullbody'){
-    // Una primera pasada garantiza representación de los grandes grupos.
     ['Piernas','Pecho','Espalda','Hombros','Core'].forEach(g=>{
       const p=pickForGroup(g,1,selected);
-      if(p[0])selected.push(p[0]);
+      if(p[0]) selected.push(p[0]);
     });
-
-    // Después rellenamos hasta el número correspondiente a la duración,
-    // sin repetir jamás el mismo ejercicio.
     while(selected.length<target){
-      let added=false;
-      for(const g of groups){
-        const p=pickForGroup(g,1,selected);
-        if(p[0]){
-          selected.push(p[0]);
-          added=true;
-        }
-        if(selected.length>=target)break;
-      }
-      if(!added)break;
+      const used=new Set(selected.map(e=>e.name));
+      const candidates=repo.filter(e=>groups.includes(e.group)&&!used.has(e.name));
+      const next=pickForGroupFromPool(candidates,selected);
+      if(!next) break;
+      selected.push(next);
     }
     return selected.slice(0,target);
   }
 
-  // Reparto equilibrado entre los grupos del entrenamiento.
-  // Ej.: Espalda/Bíceps -> 5 ejercicios = 3 espalda + 2 bíceps;
-  // 7 = 4 + 3; 9 = 5 + 4; 11 = 6 + 5.
+  // 1) Primero repartimos el número de ejercicios entre los grupos.
+  // La prioridad A-E solo decide qué ejercicios entran DENTRO de cada grupo.
   const pools=groups.map(g=>({
     group:g,
-    items:repo.filter(e=>e.group===g).sort((a,b)=>b.priority-a.priority)
+    items:repo.filter(e=>e.group===g)
   }));
 
+  const totalAvailable=pools.reduce((sum,p)=>sum+p.items.length,0);
+  if(totalAvailable===0) return [];
+
+  // Reparto base equilibrado.
   const counts=pools.map(p=>Math.floor(target/groups.length));
   let remaining=target-counts.reduce((a,b)=>a+b,0);
 
-  // Los ejercicios disponibles determinan dónde colocar los extras.
-  // En empate se respeta el orden habitual de los grupos.
-  const order=pools
-    .map((p,i)=>({i,available:p.items.length}))
-    .sort((a,b)=>b.available-a.available||a.i-b.i);
-
-  for(const item of order){
-    if(!remaining)break;
-    if(counts[item.i]<pools[item.i].items.length){
-      counts[item.i]++;
-      remaining--;
-    }
+  // Los ejercicios sobrantes se asignan a los grupos que tengan más margen
+  // disponible, sin permitir que un grupo reciba más ejercicios de los que tiene.
+  while(remaining>0){
+    let bestIndex=-1;
+    let bestCapacity=-1;
+    pools.forEach((p,i)=>{
+      const capacity=p.items.length-counts[i];
+      if(capacity>bestCapacity){
+        bestCapacity=capacity;
+        bestIndex=i;
+      }
+    });
+    if(bestIndex<0||bestCapacity<=0) break;
+    counts[bestIndex]++;
+    remaining--;
   }
 
+  // 2) Seleccionamos dentro de cada grupo por prioridad y variedad de tags.
   pools.forEach((p,i)=>{
+    if(counts[i]<=0)return;
     const picked=pickForGroup(p.group,counts[i],selected);
     selected.push(...picked);
   });
 
-  // Si algún grupo no tiene suficientes ejercicios, rellenamos con los demás.
-  if(selected.length<target){
+  // 3) Si un grupo no tenía suficientes ejercicios, redistribuimos su déficit
+  // entre TODOS los grupos restantes. Esto garantiza que no se quede una sesión
+  // artificialmente corta mientras existan ejercicios válidos disponibles.
+  if(selected.length<Math.min(target,totalAvailable)){
     const used=new Set(selected.map(e=>e.name));
-    const extra=repo
-      .filter(e=>groups.includes(e.group)&&!used.has(e.name))
-      .sort((a,b)=>b.priority-a.priority);
-    selected.push(...extra.slice(0,target-selected.length));
+    while(selected.length<Math.min(target,totalAvailable)){
+      const candidates=repo.filter(e=>groups.includes(e.group)&&!used.has(e.name));
+      const next=pickForGroupFromPool(candidates,selected);
+      if(!next) break;
+      selected.push(next);
+      used.add(next.name);
+    }
   }
 
   return selected.slice(0,target);
+}
+function pickForGroupFromPool(pool,already){
+  const usedTags=new Set(already.flatMap(e=>e.tags||[]));
+  return pool.slice().sort((a,b)=>{
+    const ga=PRIORITY_RANK[a.priority]||3, gb=PRIORITY_RANK[b.priority]||3;
+    const na=(a.tags||[]).filter(t=>!usedTags.has(t)).length;
+    const nb=(b.tags||[]).filter(t=>!usedTags.has(t)).length;
+    return gb-ga || nb-na || (b.tags||[]).length-(a.tags||[]).length;
+  })[0]||null;
+}
+
+function sameTagProfile(a,b){
+  const aTags=[...(a.tags||[])].sort();
+  const bTags=[...(b.tags||[])].sort();
+  return aTags.length===bTags.length && aTags.every((tag,index)=>tag===bTags[index]);
 }
 
 function getSwapCandidates(old,i){
@@ -1197,18 +1351,14 @@ function getSwapCandidates(old,i){
   return repo
     .filter(e=>{
       if(e.name===old.name || e.group!==old.group)return false;
-      // El candidato no puede ser el mismo ejercicio que ya ocupa otra posición.
+      // Nunca sustituir por un ejercicio que ya esté en otra posición.
       if(lastPlan.some((current,index)=>index!==i&&current.name===e.name))return false;
-      // Debe compartir al menos un tag. Los que comparten más tags aparecen primero.
-      return sharedTags(e,old).length>0;
+      // Las alternativas deben tener exactamente el mismo perfil de tags.
+      // Así BÍCEPS+BRAQUIAL solo se intercambia con BÍCEPS+BRAQUIAL,
+      // mientras que BÍCEPS solo se intercambia con BÍCEPS.
+      return sameTagProfile(e,old);
     })
-    .map(e=>({
-      exercise:e,
-      overlap:sharedTags(e,old).length,
-      allOldTags:(old.tags||[]).every(tag=>(e.tags||[]).includes(tag))
-    }))
-    .sort((a,b)=>b.allOldTags-a.allOldTags||b.overlap-a.overlap||b.exercise.priority-a.exercise.priority)
-    .map(x=>x.exercise);
+    .sort((a,b)=>b.priority-a.priority);
 }
 
 function hasAlternative(i){
@@ -1236,7 +1386,7 @@ function setPlanFor(e,intensity){
 
   const isCompound=e.type==='Compuesto';
 
-  if(im.heavy&&isCompound&&e.priority>=3){
+  if(im.heavy&&isCompound&&(PRIORITY_RANK[e.priority]||0)>=5){
     const base=Math.max(1,im.sets-1);
     const reps=intensity==='Muy alta'?7:8;
     const heavyReps=intensity==='Muy alta'?5:6;
@@ -1264,9 +1414,10 @@ function restFor(e,intensity){
 function exerciseHtml(e,i,intensity){
   const p=setPlanFor(e,intensity);
   const swap=hasAlternative(i)?`<button class="secondary" onclick="swapExercise(${i})">↻ Ver otra opción</button>`:'';
+  const tags=(e.tags||[]).map(t=>esc(t)).join(' · ');
   return `<div class="exercise">
     <div class="ex-head">
-      <div><div class="ex-name">${i+1}. ${esc(e.name)}</div><div class="ex-meta">${esc(e.group)} · ${esc(e.type)}</div></div>
+      <div><div class="ex-name">${i+1}. ${esc(e.name)}</div><div class="ex-meta">${esc(e.group)} | ${tags}</div></div>
       ${swap}
     </div>
     <div class="sets">${p.text}</div>
@@ -1304,17 +1455,121 @@ function renderTags(tags){return (tags||[]).map(t=>`<span class="repo-tag">${esc
 
 function renderTags(tags){return (tags||[]).map(t=>`<span class="repo-tag">${esc(t)}</span>`).join('');}
 
-function repoMatchesSearch(e,query){
-  if(!query)return true;
-  const haystack=[e.name,e.group,e.type,...(e.tags||[])].join(' ').toLowerCase();
-  return haystack.includes(query.toLowerCase());
+function populateRepoFilters(){
+  const groupEl=document.getElementById('repoGroupFilter');
+  if(groupEl){
+    const current=groupEl.value;
+    groupEl.innerHTML='<option value="">Todos los grupos</option>'+ALL_GROUPS.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('');
+    if(ALL_GROUPS.includes(current))groupEl.value=current;
+  }
+
+  const options=document.getElementById('repoTagFilterOptions');
+  if(options){
+    const selected=getSelectedTagFilters();
+    options.innerHTML=ALL_TAGS.map(tag=>`
+      <label class="tag-filter-option">
+        <input type="checkbox" value="${esc(tag)}" ${selected.includes(tag)?'checked':''} onchange="toggleTagFilter('${esc(tag)}',this.checked)">
+        <span>${esc(tag)}</span>
+      </label>`).join('');
+    updateTagFilterButton();
+  }
 }
+
+function getSelectedTagFilters(){
+  return Array.from(document.querySelectorAll('#repoTagFilterOptions input[type="checkbox"]:checked')).map(x=>x.value);
+}
+
+let selectedRepoTags=[];
+
+function syncTagFilterChecks(){
+  document.querySelectorAll('#repoTagFilterOptions input[type="checkbox"]').forEach(cb=>{
+    cb.checked=selectedRepoTags.includes(cb.value);
+  });
+}
+
+function toggleTagFilterMenu(ev){
+  ev.stopPropagation();
+  const menu=document.getElementById('repoTagFilterMenu');
+  const button=document.getElementById('repoTagFilterButton');
+  if(!menu)return;
+  menu.classList.toggle('hidden-filter');
+  if(button)button.setAttribute('aria-expanded',String(!menu.classList.contains('hidden-filter')));
+}
+
+function closeTagFilterMenu(){
+  const menu=document.getElementById('repoTagFilterMenu');
+  const button=document.getElementById('repoTagFilterButton');
+  if(menu)menu.classList.add('hidden-filter');
+  if(button)button.setAttribute('aria-expanded','false');
+}
+
+function toggleTagFilter(tag,checked){
+  if(checked){
+    if(!selectedRepoTags.includes(tag))selectedRepoTags.push(tag);
+  }else{
+    selectedRepoTags=selectedRepoTags.filter(t=>t!==tag);
+  }
+  updateTagFilterButton();
+  renderRepo();
+}
+
+function setAllTagFilters(){
+  selectedRepoTags=[];
+  syncTagFilterChecks();
+  updateTagFilterButton();
+  renderRepo();
+  closeTagFilterMenu();
+}
+
+function updateTagFilterButton(){
+  const button=document.getElementById('repoTagFilterButton');
+  if(!button)return;
+  if(!selectedRepoTags.length){
+    button.innerHTML='Todos los tags <span>⌄</span>';
+  }else if(selectedRepoTags.length===1){
+    button.innerHTML=`${esc(selectedRepoTags[0])} <span>⌄</span>`;
+  }else{
+    button.innerHTML=`${selectedRepoTags.length} tags seleccionados <span>⌄</span>`;
+  }
+}
+
+function repoMatchesSearch(e,query,groupFilter,tagFilters,priorityFilter){
+  if(query){
+    const haystack=[e.name,e.group,e.type,...(e.tags||[])].join(' ').toLowerCase();
+    if(!haystack.includes(query.toLowerCase()))return false;
+  }
+  if(groupFilter && e.group!==groupFilter)return false;
+  // Varios tags funcionan como filtro AND:
+  // si seleccionas Bíceps + Braquial, el ejercicio debe tener ambos.
+  if(tagFilters.length && !tagFilters.every(tag=>(e.tags||[]).includes(tag)))return false;
+  if(priorityFilter && e.priority!==priorityFilter)return false;
+  return true;
+}
+
+function resetRepoFilters(){
+  const search=document.getElementById('repoSearch');
+  const group=document.getElementById('repoGroupFilter');
+  const priority=document.getElementById('repoPriorityFilter');
+  if(search)search.value='';
+  if(group)group.value='';
+  if(priority)priority.value='';
+  selectedRepoTags=[];
+  syncTagFilterChecks();
+  updateTagFilterButton();
+  closeTagFilterMenu();
+  renderRepo();
+}
+
+document.addEventListener('click',function(ev){
+  const wrap=document.querySelector('.tag-filter-wrap');
+  if(wrap && !wrap.contains(ev.target))closeTagFilterMenu();
+});
 
 function renderRepoCard(e,i){
   if(editingIndex!==i){
     return `<div class="repo-card" data-index="${i}">
       <div class="repo-card-top">
-        <div><div class="repo-card-name">${esc(e.name)}</div><div class="repo-card-meta">${esc(e.group)} · ${esc(e.type)}</div></div>
+        <div class="repo-card-title-row"><span class="priority-badge ${e.priority.toLowerCase()}">${e.priority}</span><div><div class="repo-card-name">${esc(e.name)}</div><div class="repo-card-meta">${esc(e.group)} · ${esc(e.type)}</div></div></div>
         <div class="repo-card-actions"><button class="icon-btn" title="Editar ejercicio" onclick="editExercise(${i})">✎</button></div>
       </div>
       <div class="repo-info-row">${renderTags(e.tags)}</div>
@@ -1334,6 +1589,7 @@ function renderRepoCard(e,i){
         <div class="edit-field full"><label>Ejercicio</label><input id="edit-name-${i}" value="${esc(e.name)}"></div>
         <div class="edit-field"><label>Grupo</label><select id="edit-group-${i}">${ALL_GROUPS.map(g=>`<option ${e.group===g?'selected':''}>${g}</option>`).join('')}</select></div>
         <div class="edit-field"><label>Tipo</label><select id="edit-type-${i}">${['Compuesto','Aislamiento','Core'].map(t=>`<option ${e.type===t?'selected':''}>${t}</option>`).join('')}</select></div>
+        <div class="edit-field"><label>Prioridad</label><select id="edit-priority-${i}" class="priority-select">${['A','B','C','D','E'].map(p=>`<option ${e.priority===p?'selected':''}>${p}</option>`).join('')}</select></div>
         <div class="edit-field"><label>Carga RIR 2</label><input id="edit-load-${i}" value="${esc(e.load)}"></div>
         <div class="edit-field"><label>Unidad</label><input id="edit-unit-${i}" value="${esc(e.unit)}"></div>
         <div class="edit-field"><label>Incremento</label><input id="edit-inc-${i}" value="${esc(e.inc)}"></div>
@@ -1355,14 +1611,25 @@ function renderRepoCard(e,i){
 }
 
 function renderRepo(){
+  populateRepoFilters();
   const searchEl=document.getElementById('repoSearch');
+  const groupEl=document.getElementById('repoGroupFilter');
+  const priorityEl=document.getElementById('repoPriorityFilter');
   const query=searchEl?searchEl.value.trim():'';
-  const filtered=repo.filter(e=>repoMatchesSearch(e,query));
+  const groupFilter=groupEl?groupEl.value:'';
+  const priorityFilter=priorityEl?priorityEl.value:'';
+  const tagFilters=[...selectedRepoTags];
+  const filtered=repo.filter(e=>repoMatchesSearch(e,query,groupFilter,tagFilters,priorityFilter));
+  const activeFilters=Boolean(query||groupFilter||tagFilters.length||priorityFilter);
   const count=document.getElementById('repoCount');
-  if(count)count.textContent=query?`${filtered.length} ejercicio${filtered.length===1?'':'s'} encontrado${filtered.length===1?'':'s'}`:`${repo.length} ejercicios en el repositorio`;
+  if(count)count.textContent=activeFilters
+    ? `${filtered.length} ejercicio${filtered.length===1?'':'s'} encontrado${filtered.length===1?'':'s'} de ${repo.length}`
+    : `${repo.length} ejercicios en el repositorio`;
+  const reset=document.querySelector('.filter-reset');
+  if(reset)reset.style.visibility=activeFilters?'visible':'hidden';
   document.getElementById('repoTable').innerHTML=filtered.length
     ? `<div class="repo-list">${filtered.map(e=>renderRepoCard(e,repo.indexOf(e))).join('')}</div>`
-    : `<div class="repo-empty">No hay ejercicios que coincidan con “${esc(query)}”.</div>`;
+    : `<div class="repo-empty">No hay ejercicios que coincidan con los filtros seleccionados.</div>`;
 }
 
 function getRepoCard(i){
@@ -1419,6 +1686,7 @@ function saveExercise(i){
   repo[i].name=document.getElementById(`edit-name-${i}`).value.trim()||'Nuevo ejercicio';
   repo[i].group=document.getElementById(`edit-group-${i}`).value;
   repo[i].type=document.getElementById(`edit-type-${i}`).value;
+  repo[i].priority=document.getElementById(`edit-priority-${i}`).value;
   repo[i].load=loadRaw==='?'?'?':Number(loadRaw);
   repo[i].unit=document.getElementById(`edit-unit-${i}`).value.trim()||'kg';
   repo[i].inc=incRaw===''?2.5:Number(incRaw);
@@ -1450,7 +1718,7 @@ function addExercise(){
     load:'?',
     unit:'kg',
     inc:2.5,
-    priority:1,
+    priority:'C',
     tags:['Pectoral'],
     cue:'Añade aquí una indicación técnica breve y específica.'
   });
