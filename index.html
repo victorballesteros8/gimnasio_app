@@ -1032,6 +1032,11 @@ li::marker{
 <div class="actions">
 <button class="primary" onclick="addExercise()">＋ Añadir ejercicio</button>
 <button class="secondary" onclick="resetRepo()">Restaurar valores iniciales</button>
+<button class="secondary" onclick="exportRepo()">📤 Exportar repositorio</button>
+<label class="secondary" style="display:flex;justify-content:center;align-items:center;cursor:pointer;">
+  📥 Importar repositorio
+  <input id="repoImportFile" type="file" accept=".json,application/json" hidden onchange="importRepo(event)">
+</label>
 </div>
 </div>
 <div class="panel"><div id="repoTable"></div></div>
@@ -1137,9 +1142,98 @@ const initialRepo = [{"name": "Prensa de piernas", "group": "Piernas", "type": "
 {"name": "Abdominales colgado en barra", "group": "Core", "type": "Core", "load": "?", "unit": "peso corporal", "inc": 2.5, "priority": "A", "tags": ["Core", "Flexores de cadera"], "cue": "Inicia con retroversión pélvica y eleva las rodillas sin balancear el cuerpo."},
 {"name": "Crunch en polea", "group": "Core", "type": "Core", "load": "?", "unit": "kg", "inc": 2.5, "priority": "D", "tags": ["Core"], "cue": "Flexiona el tronco acercando las costillas a la pelvis sin tirar de los brazos."}];
 
-let repo=JSON.parse(localStorage.getItem('gymRepo')||'null');
-if(!Array.isArray(repo)) repo=normalizeRepo(structuredClone(initialRepo));
-repo=normalizeRepo(repo);
+/*
+  Persistencia del repositorio:
+  IndexedDB almacena los ejercicios de forma persistente en el dispositivo.
+  "repo" sigue siendo el array que utiliza toda la lógica de la aplicación.
+*/
+const DB_NAME='GimnasioDB';
+const DB_VERSION=1;
+const STORE_NAME='exercises';
+
+let db=null;
+let repo=[];
+let repoReady=false;
+
+function openRepoDB(){
+  return new Promise((resolve,reject)=>{
+    const request=indexedDB.open(DB_NAME,DB_VERSION);
+
+    request.onupgradeneeded=event=>{
+      const database=event.target.result;
+      if(!database.objectStoreNames.contains(STORE_NAME)){
+        database.createObjectStore(STORE_NAME,{keyPath:'id',autoIncrement:true});
+      }
+    };
+
+    request.onsuccess=event=>{
+      db=event.target.result;
+      resolve(db);
+    };
+
+    request.onerror=()=>reject(request.error);
+  });
+}
+
+function readAllExercises(){
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction(STORE_NAME,'readonly');
+    const request=tx.objectStore(STORE_NAME).getAll();
+    request.onsuccess=()=>resolve(request.result||[]);
+    request.onerror=()=>reject(request.error);
+  });
+}
+
+function writeAllExercises(list){
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction(STORE_NAME,'readwrite');
+    const store=tx.objectStore(STORE_NAME);
+
+    store.clear();
+
+    list.forEach(exercise=>{
+      const clean={...exercise};
+      delete clean.id;
+      store.add(clean);
+    });
+
+    tx.oncomplete=resolve;
+    tx.onerror=()=>reject(tx.error);
+    tx.onabort=()=>reject(tx.error||new Error('Transacción abortada.'));
+  });
+}
+
+async function initRepoDB(){
+  try{
+    await openRepoDB();
+    const stored=await readAllExercises();
+
+    if(stored.length){
+      repo=normalizeRepo(stored);
+    }else{
+      repo=normalizeRepo(structuredClone(initialRepo));
+      await writeAllExercises(repo);
+    }
+
+    repoReady=true;
+    renderRepo();
+  }catch(error){
+    console.error('Error inicializando IndexedDB:',error);
+    repo=normalizeRepo(structuredClone(initialRepo));
+    renderRepo();
+    alert('No se pudo abrir la base de datos local. La aplicación funcionará durante esta sesión, pero los cambios podrían no conservarse.');
+  }
+}
+
+async function save(){
+  if(!db)return;
+  try{
+    await writeAllExercises(repo);
+  }catch(error){
+    console.error('Error guardando repositorio:',error);
+    alert('No se pudo guardar el repositorio en el almacenamiento local.');
+  }
+}
 
 let lastPlan=[];
 let editingIndex=null;
@@ -1199,6 +1293,70 @@ function inferTags(e){
 }
 
 function save(){localStorage.setItem('gymRepo',JSON.stringify(repo));}
+
+async function exportRepo(){
+  try{
+    const data=normalizeRepo(structuredClone(repo));
+    const json=JSON.stringify(data,null,2);
+    const blob=new Blob([json],{type:'application/json;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    const date=new Date().toISOString().slice(0,10);
+
+    a.href=url;
+    a.download=`repositorio-gimnasio-${date}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }catch(error){
+    console.error('Error exportando repositorio:',error);
+    alert('No se pudo exportar el repositorio.');
+  }
+}
+
+async function importRepo(event){
+  const input=event.target;
+  const file=input.files?.[0];
+  if(!file)return;
+
+  try{
+    const raw=await file.text();
+    const parsed=JSON.parse(raw);
+
+    if(!Array.isArray(parsed)){
+      throw new Error('El archivo no contiene un array de ejercicios.');
+    }
+
+    const imported=normalizeRepo(parsed);
+
+    if(!imported.length){
+      throw new Error('El archivo no contiene ejercicios.');
+    }
+
+    const ok=confirm(
+      `Se van a importar ${imported.length} ejercicios y sustituirán el repositorio actual. ¿Continuar?`
+    );
+
+    if(!ok)return;
+
+    repo=imported;
+    await save();
+
+    editingIndex=null;
+    editingTags=[];
+    selectedRepoTags=[];
+
+    renderRepo();
+
+    alert(`Repositorio importado correctamente: ${repo.length} ejercicios.`);
+  }catch(error){
+    console.error('Error importando repositorio:',error);
+    alert('No se pudo importar el archivo. Comprueba que sea un JSON válido con el formato del repositorio.');
+  }finally{
+    input.value='';
+  }
+}
 
 function showTab(t){
   ['plan','repo','info'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==t));
@@ -1732,12 +1890,12 @@ function addExercise(){
   });
 }
 
-function resetRepo(){
+async function resetRepo(){
   if(confirm('¿Restaurar todas las cargas, tags y ejercicios iniciales?')){
-    repo=structuredClone(initialRepo);
+    repo=normalizeRepo(structuredClone(initialRepo));
     editingIndex=null;
     editingTags=[];
-    save();
+    await save();
     renderRepo();
   }
 }
@@ -1762,7 +1920,7 @@ manifestLink.rel="manifest";
 manifestLink.href=manifestURL;
 document.head.appendChild(manifestLink);
 
-renderRepo();
+initRepoDB();
 </script>
 </body>
 </html>
