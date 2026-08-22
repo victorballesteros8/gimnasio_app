@@ -1077,16 +1077,11 @@ li::marker{
       </li>
 
       <li>
-        La prioridad A–E solo se usa para la selección inicial: primero se respeta el reparto entre grupos y, dentro de cada grupo, se priorizan A, después B, C, D y E. Entre ejercicios con la misma letra se busca variedad de músculos mediante los tags.
-        A = Ejercicio fundamental. Aunque haya poco tiempo, hay que hacerlo.
-        B = Ejercicio importante. En una sesión normal tiene que estar sí o sí.
-        C = Ejercicio complementario. Con algo más de tiempo puede tener un hueco en el entrenamiento.
-        D = Ejercicio residual. Salvo que haya mucho tiempo o poca alternativa, no debería de estar presente.
-        E = Ejercicio prescindible. Solo si no hay alternativa en el grupo muscular para el tiempo disponible.
+        La prioridad A–E solo se usa para la selección inicial: primero se respeta el reparto entre grupos y, dentro de cada grupo, se priorizan A, después B, C, D y E. Entre ejercicios con la misma letra se busca variedad de músculos mediante los tags.<br>A = Ejercicio fundamental. Aunque haya poco tiempo, hay que hacerlo.<br>B = Ejercicio importante. En una sesión normal tiene que estar sí o sí.<br>C = Ejercicio complementario. Con algo más de tiempo puede tener un hueco en el entrenamiento.<br>D = Ejercicio residual. Salvo que haya mucho tiempo o poca alternativa, no debería de estar presente.<br>E = Ejercicio prescindible. Solo si no hay alternativa en el grupo muscular para el tiempo disponible.
       </li>
 
       <li>
-        Las alternativas de “Ver otra opción” no dependen de la prioridad: solo se ofrecen ejercicios del mismo grupo con exactamente el mismo perfil de tags y que no estén ya en la sesión.
+        Las alternativas de “Otra opción” no dependen de la prioridad: solo se ofrecen ejercicios del mismo grupo con exactamente el mismo perfil de tags y que no estén ya en la sesión.
       </li>
 
       <li>
@@ -1144,9 +1139,9 @@ const initialRepo = [{"name": "Prensa de piernas", "group": "Piernas", "type": "
 {"name": "Sentadilla libre con barra", "group": "Piernas", "type": "Compuesto", "load": "?", "unit": "kg", "inc": "?", "priority": "D", "tags": ["Cuádriceps", "Glúteos"], "cue": "Barra estable, abdomen firme y rodillas siguiendo la línea de los pies; desciende con control y mantén el tronco estable."},
 {"name": "Zancadas con mancuernas", "group": "Piernas", "type": "Compuesto", "load": "?", "unit": "kg/mancuerna", "inc": "?", "priority": "D", "tags": ["Cuádriceps", "Glúteos"], "cue": "Da un paso estable, desciende con control y mantén la rodilla alineada con el pie durante todo el movimiento."},
 {"name": "Curl femoral tumbado", "group": "Piernas", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": "?", "priority": "D", "tags": ["Isquios"], "cue": "Mantén la cadera apoyada y flexiona las rodillas de forma controlada evitando rebotes al final del recorrido."},
-{"name": "Press inclinado con mancuernas", "group": "Pecho", "type": "Compuesto", "load": "?", "unit": "kg/mancuerna", "inc": "C", "priority": "?", "tags": ["Pectoral superior", "Deltoide anterior", "Tríceps"], "cue": "Escápulas estables y banco moderadamente inclinado; baja las mancuernas con control y empuja sin elevar los hombros."},
-{"name": "Peso muerto rumano", "group": "Piernas", "type": "Compuesto", "load": ?, "unit": "kg", "inc": ?, "priority": "E", "tags": ["Isquios", "Glúteos"], "cue": "Rodillas ligeramente flexionadas, cadera atrás y barra próxima a los muslos durante todo el recorrido."},
-{"name": "Fondos en paralelas", "group": "Pecho", "type": "Compuesto", "load": "?", "unit": "peso corporal/lastre", "inc": "D", "priority": "?", "tags": ["Pectoral", "Tríceps"], "cue": "Mantén los hombros estables y desciende con control; inclina ligeramente el tronco para enfatizar más el pecho."},
+{"name": "Press inclinado con mancuernas", "group": "Pecho", "type": "Compuesto", "load": "?", "unit": "kg/mancuerna", "inc": "?", "priority": "C", "tags": ["Pectoral superior", "Deltoide anterior", "Tríceps"], "cue": "Escápulas estables y banco moderadamente inclinado; baja las mancuernas con control y empuja sin elevar los hombros."},
+{"name": "Peso muerto rumano", "group": "Piernas", "type": "Compuesto", "load": "?", "unit": "kg", "inc": "?", "priority": "E", "tags": ["Isquios", "Glúteos"], "cue": "Rodillas ligeramente flexionadas, cadera atrás y barra próxima a los muslos durante todo el recorrido."},
+{"name": "Fondos en paralelas", "group": "Pecho", "type": "Compuesto", "load": "?", "unit": "peso corporal/lastre", "inc": "?", "priority": "D", "tags": ["Pectoral", "Tríceps"], "cue": "Mantén los hombros estables y desciende con control; inclina ligeramente el tronco para enfatizar más el pecho."},
 {"name": "Press francés", "group": "Tríceps", "type": "Aislamiento", "load": "20", "unit": "kg", "inc": "1.5", "priority": "D", "tags": ["Tríceps"], "cue": "Mantén los codos relativamente fijos y flexiona el codo llevando la carga hacia la frente o detrás de la cabeza de forma controlada."},
 {"name": "Extensión de tríceps por encima de la cabeza", "group": "Tríceps", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": "?", "priority": "C", "tags": ["Tríceps"], "cue": "Mantén los codos apuntando al frente y extiende sin arquear la espalda ni perder la posición de los brazos."},
 {"name": "Remo con barra", "group": "Espalda", "type": "Compuesto", "load": "?", "unit": "kg", "inc": "?", "priority": "D", "tags": ["Espalda media", "Dorsal", "Bíceps"], "cue": "Bisagra de cadera estable y espalda neutra; lleva los codos hacia atrás manteniendo el torso quieto."},
@@ -1400,7 +1395,7 @@ function sharedTags(a,b){
 /*
   Selecciona ejercicios sin repetir NUNCA el mismo ejercicio dentro de una sesión.
   Los tags NO limitan la cantidad de ejercicios de un mismo músculo: sirven para
-  encontrar alternativas coherentes cuando el usuario pulsa "Ver otra opción".
+  encontrar alternativas coherentes cuando el usuario pulsa "Otra opción".
 */
 function pickForGroup(group,count,already=[]){
   const usedNames=new Set(already.map(e=>e.name));
@@ -1592,7 +1587,7 @@ function restFor(e,intensity){
 
 function exerciseHtml(e,i,intensity){
   const p=setPlanFor(e,intensity);
-  const swap=hasAlternative(i)?`<button class="secondary" onclick="swapExercise(${i})">↻ Ver otra opción</button>`:'';
+  const swap=hasAlternative(i)?`<button class="secondary" onclick="swapExercise(${i})">↻ Otra opción</button>`:'';
   const tags=(e.tags||[]).map(t=>esc(t)).join(' · ');
   return `<div class="exercise">
     <div class="ex-head">
