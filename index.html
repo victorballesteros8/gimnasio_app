@@ -1292,8 +1292,6 @@ function inferTags(e){
   return tags.length?tags:['Core'];
 }
 
-function save(){localStorage.setItem('gymRepo',JSON.stringify(repo));}
-
 async function exportRepo(){
   try{
     const data=normalizeRepo(structuredClone(repo));
