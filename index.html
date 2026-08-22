@@ -1052,11 +1052,6 @@ li::marker{
     <ul>
 
       <li>
-        Objetivo principal: hipertrofia, con progresión de
-        carga/repeticiones y sin convertir cada sesión en una prueba de fuerza.
-      </li>
-
-      <li>
         RIR 2 es la referencia del repositorio; la sesión puede acercarse
         a RIR 1 en series pesadas de días altos.
       </li>
@@ -1083,6 +1078,11 @@ li::marker{
 
       <li>
         La prioridad A–E solo se usa para la selección inicial: primero se respeta el reparto entre grupos y, dentro de cada grupo, se priorizan A, después B, C, D y E. Entre ejercicios con la misma letra se busca variedad de músculos mediante los tags.
+        A = Ejercicio fundamental. Aunque haya poco tiempo, hay que hacerlo.
+        B = Ejercicio importante. En una sesión normal tiene que estar sí o sí.
+        C = Ejercicio complementario. Con algo más de tiempo puede tener un hueco en el entrenamiento.
+        D = Ejercicio residual. Salvo que haya mucho tiempo o poca alternativa, no debería de estar presente.
+        E = Ejercicio prescindible. Solo si no hay alternativa en el grupo muscular para el tiempo disponible.
       </li>
 
       <li>
@@ -1109,7 +1109,7 @@ const initialRepo = [{"name": "Prensa de piernas", "group": "Piernas", "type": "
 {"name": "Sentadilla guiada en máquina", "group": "Piernas", "type": "Compuesto", "load": 50, "unit": "kg", "inc": 2.5, "priority": "A", "tags": ["Cuádriceps", "Glúteos"], "cue": "Apoya toda la planta y desciende hasta un rango cómodo manteniendo el tronco estable."},
 {"name": "Extensión de cuádriceps", "group": "Piernas", "type": "Aislamiento", "load": 40, "unit": "kg", "inc": 5, "priority": "B", "tags": ["Cuádriceps"], "cue": "Ajusta el eje a la rodilla y extiende sin despegar la cadera del asiento."},
 {"name": "Curl femoral sentado", "group": "Piernas", "type": "Aislamiento", "load": 36, "unit": "kg", "inc": 5, "priority": "B", "tags": ["Isquios"], "cue": "Mantén la cadera pegada al respaldo y lleva los talones hacia abajo sin rebote."},
-{"name": "Peso muerto rumano", "group": "Piernas", "type": "Compuesto", "load": 60, "unit": "kg", "inc": 2.5, "priority": "B", "tags": ["Isquios", "Glúteos"], "cue": "Rodillas ligeramente flexionadas, cadera atrás y barra próxima a los muslos durante todo el recorrido."},
+{"name": "Peso muerto convencional", "group": "Piernas", "type": "Compuesto", "load": "60", "unit": "kg", "inc": "2.5", "priority": "B", "tags": ["Isquios", "Glúteos", "Espalda"], "cue": "Barra cerca de las piernas, espalda neutra y abdomen firme; empuja el suelo y extiende cadera y rodillas de forma coordinada."},
 {"name": "Elevación de gemelo sentado", "group": "Piernas", "type": "Aislamiento", "load": 30, "unit": "kg", "inc": 5, "priority": "B", "tags": ["Gemelos"], "cue": "Baja el talón con control y busca una contracción completa sin rebotar."},
 {"name": "Gemelo de pie en máquina", "group": "Piernas", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 5, "priority": "C", "tags": ["Gemelos"], "cue": "Mantén las piernas estables, baja el talón con control y busca una contracción completa sin rebote."},
 {"name": "Hip thrust", "group": "Piernas", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": "E", "tags": ["Glúteos"], "cue": "Barbilla ligeramente hacia el pecho y pelvis neutra; termina extendiendo la cadera sin hiperextender la espalda."},
@@ -1140,7 +1140,24 @@ const initialRepo = [{"name": "Prensa de piernas", "group": "Piernas", "type": "
 {"name": "Encogimiento de hombros con mancuerna", "group": "Hombros", "type": "Aislamiento", "load": 20, "unit": "kg/mancuerna", "inc": 2, "priority": "B", "tags": ["Trapecio"], "cue": "Eleva los hombros verticalmente sin hacer círculos y pausa brevemente arriba."},
 {"name": "Abdominales inclinados en banco", "group": "Core", "type": "Core", "load": 15, "unit": "kg", "inc": 2.5, "priority": "B", "tags": ["Core"], "cue": "Flexiona la columna de forma controlada sin tirar del cuello y vuelve sin rebote."},
 {"name": "Abdominales colgado en barra", "group": "Core", "type": "Core", "load": "?", "unit": "peso corporal", "inc": 2.5, "priority": "A", "tags": ["Core", "Flexores de cadera"], "cue": "Inicia con retroversión pélvica y eleva las rodillas sin balancear el cuerpo."},
-{"name": "Crunch en polea", "group": "Core", "type": "Core", "load": "?", "unit": "kg", "inc": 2.5, "priority": "D", "tags": ["Core"], "cue": "Flexiona el tronco acercando las costillas a la pelvis sin tirar de los brazos."}];
+{"name": "Crunch en polea", "group": "Core", "type": "Core", "load": "?", "unit": "kg", "inc": 2.5, "priority": "D", "tags": ["Core"], "cue": "Flexiona el tronco acercando las costillas a la pelvis sin tirar de los brazos."},
+{"name": "Sentadilla libre con barra", "group": "Piernas", "type": "Compuesto", "load": "?", "unit": "kg", "inc": "?", "priority": "D", "tags": ["Cuádriceps", "Glúteos"], "cue": "Barra estable, abdomen firme y rodillas siguiendo la línea de los pies; desciende con control y mantén el tronco estable."},
+{"name": "Zancadas con mancuernas", "group": "Piernas", "type": "Compuesto", "load": "?", "unit": "kg/mancuerna", "inc": "?", "priority": "D", "tags": ["Cuádriceps", "Glúteos"], "cue": "Da un paso estable, desciende con control y mantén la rodilla alineada con el pie durante todo el movimiento."},
+{"name": "Curl femoral tumbado", "group": "Piernas", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": "?", "priority": "D", "tags": ["Isquios"], "cue": "Mantén la cadera apoyada y flexiona las rodillas de forma controlada evitando rebotes al final del recorrido."},
+{"name": "Press inclinado con mancuernas", "group": "Pecho", "type": "Compuesto", "load": "?", "unit": "kg/mancuerna", "inc": "C", "priority": "?", "tags": ["Pectoral superior", "Deltoide anterior", "Tríceps"], "cue": "Escápulas estables y banco moderadamente inclinado; baja las mancuernas con control y empuja sin elevar los hombros."},
+{"name": "Peso muerto rumano", "group": "Piernas", "type": "Compuesto", "load": ?, "unit": "kg", "inc": ?, "priority": "E", "tags": ["Isquios", "Glúteos"], "cue": "Rodillas ligeramente flexionadas, cadera atrás y barra próxima a los muslos durante todo el recorrido."},
+{"name": "Fondos en paralelas", "group": "Pecho", "type": "Compuesto", "load": "?", "unit": "peso corporal/lastre", "inc": "D", "priority": "?", "tags": ["Pectoral", "Tríceps"], "cue": "Mantén los hombros estables y desciende con control; inclina ligeramente el tronco para enfatizar más el pecho."},
+{"name": "Press francés", "group": "Tríceps", "type": "Aislamiento", "load": "20", "unit": "kg", "inc": "1.5", "priority": "D", "tags": ["Tríceps"], "cue": "Mantén los codos relativamente fijos y flexiona el codo llevando la carga hacia la frente o detrás de la cabeza de forma controlada."},
+{"name": "Extensión de tríceps por encima de la cabeza", "group": "Tríceps", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": "?", "priority": "C", "tags": ["Tríceps"], "cue": "Mantén los codos apuntando al frente y extiende sin arquear la espalda ni perder la posición de los brazos."},
+{"name": "Remo con barra", "group": "Espalda", "type": "Compuesto", "load": "?", "unit": "kg", "inc": "?", "priority": "D", "tags": ["Espalda media", "Dorsal", "Bíceps"], "cue": "Bisagra de cadera estable y espalda neutra; lleva los codos hacia atrás manteniendo el torso quieto."},
+{"name": "Jalón al pecho con agarre neutro", "group": "Espalda", "type": "Compuesto", "load": "?", "unit": "kg", "inc": "?", "priority": "C", "tags": ["Dorsal", "Bíceps"], "cue": "Mantén el torso estable y lleva los codos hacia abajo y atrás sin tirar del peso con balanceo."},
+{"name": "Curl con mancuernas alterno", "group": "Bíceps", "type": "Aislamiento", "load": "16", "unit": "kg/mancuerna", "inc": "2.5", "priority": "C", "tags": ["Bíceps"], "cue": "Mantén el codo junto al cuerpo y evita mover el hombro o balancear el torso mientras flexionas el codo."},
+{"name": "Curl inclinado con mancuernas", "group": "Bíceps", "type": "Aislamiento", "load": "12", "unit": "kg/mancuerna", "inc": "1", "priority": "C", "tags": ["Bíceps"], "cue": "Mantén los hombros apoyados y deja que el brazo quede ligeramente por detrás del tronco; sube sin adelantar el hombro."},
+{"name": "Press Arnold", "group": "Hombros", "type": "Compuesto", "load": "?", "unit": "kg/mancuerna", "inc": "?", "priority": "E", "tags": ["Deltoide anterior", "Deltoide lateral", "Tríceps"], "cue": "Comienza con las palmas hacia ti y rota las manos durante la subida manteniendo el tronco estable y los hombros controlados."},
+{"name": "Pájaros con mancuernas", "group": "Hombros", "type": "Aislamiento", "load": "?", "unit": "kg/mancuerna", "inc": "?", "priority": "D", "tags": ["Deltoide posterior", "Espalda alta"], "cue": "Inclina el tronco con espalda neutra y separa los brazos lateralmente sin encoger los hombros."},
+{"name": "Pájaros en máquina", "group": "Hombros", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": "?", "priority": "E", "tags": ["Deltoide posterior"], "cue": "Mantén el pecho apoyado y lleva los brazos hacia atrás con control evitando compensar con los trapecios."},
+{"name": "Plancha", "group": "Core", "type": "Core", "load": "?", "unit": "peso corporal", "inc": "?", "priority": "D", "tags": ["Core"], "cue": "Mantén abdomen y glúteos activos, pelvis neutra y cuerpo alineado sin dejar caer la cadera."},
+{"name": "Pallof press", "group": "Core", "type": "Core", "load": "?", "unit": "kg", "inc": "?", "priority": "E", "tags": ["Core", "Oblicuos"], "cue": "Mantén el tronco completamente estable frente a la rotación y extiende los brazos sin perder la posición."}];
 
 /*
   Persistencia del repositorio:
