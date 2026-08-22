@@ -1021,7 +1021,7 @@ li::marker{
       </li>
 
       <li>
-        Las alternativas se seleccionan por grupo y por músculos objetivo: deben trabajar todos los tags del ejercicio actual, evitando el mismo perfil muscular y cualquier ejercicio ya presente en la sesión.
+        Las alternativas se seleccionan por grupo y por músculos objetivo: deben compartir al menos un tag con el ejercicio actual y se priorizan las que coinciden en más músculos. Nunca se repite el mismo ejercicio dentro de una sesión.
       </li>
 
     </ul>
@@ -1103,35 +1103,23 @@ function groupsFor(type){
   return type==='Fullbody'?['Piernas','Pecho','Espalda','Hombros','Bíceps','Tríceps','Core']:splitGroups[type];
 }
 
-function sameTagProfile(a,b){
-  const aTags=[...(a.tags||[])].sort().join('|');
-  const bTags=[...(b.tags||[])].sort().join('|');
-  return aTags===bTags;
+function sharedTags(a,b){
+  const bTags=new Set(b.tags||[]);
+  return (a.tags||[]).filter(tag=>bTags.has(tag));
 }
 
-function hasAllTags(candidate,reference){
-  const candidateTags=new Set(candidate.tags||[]);
-  return (reference.tags||[]).every(tag=>candidateTags.has(tag));
-}
-
-/* Selecciona ejercicios evitando perfiles musculares idénticos dentro de una misma sesión. */
+/*
+  Selecciona ejercicios sin repetir NUNCA el mismo ejercicio dentro de una sesión.
+  Los tags NO limitan la cantidad de ejercicios de un mismo músculo: sirven para
+  encontrar alternativas coherentes cuando el usuario pulsa "Ver otra opción".
+*/
 function pickForGroup(group,count,already=[]){
   const usedNames=new Set(already.map(e=>e.name));
-  const usedProfiles=new Set(already.map(e=>[...(e.tags||[])].sort().join('|')));
   const candidates=repo
     .filter(e=>e.group===group&&!usedNames.has(e.name))
     .sort((a,b)=>b.priority-a.priority);
 
-  const selected=[];
-  for(const e of candidates){
-    const profile=[...(e.tags||[])].sort().join('|');
-    if(usedProfiles.has(profile)) continue;
-    selected.push(e);
-    usedNames.add(e.name);
-    usedProfiles.add(profile);
-    if(selected.length>=count)break;
-  }
-  return selected;
+  return candidates.slice(0,count);
 }
 
 function chooseExercises(type,duration){
@@ -1139,16 +1127,22 @@ function chooseExercises(type,duration){
   let selected=[];
 
   if(type==='Fullbody'){
+    // Una primera pasada garantiza representación de los grandes grupos.
     ['Piernas','Pecho','Espalda','Hombros','Core'].forEach(g=>{
       const p=pickForGroup(g,1,selected);
       if(p[0])selected.push(p[0]);
     });
 
+    // Después rellenamos hasta el número correspondiente a la duración,
+    // sin repetir jamás el mismo ejercicio.
     while(selected.length<target){
       let added=false;
       for(const g of groups){
         const p=pickForGroup(g,1,selected);
-        if(p[0]){selected.push(p[0]);added=true;}
+        if(p[0]){
+          selected.push(p[0]);
+          added=true;
+        }
         if(selected.length>=target)break;
       }
       if(!added)break;
@@ -1156,21 +1150,65 @@ function chooseExercises(type,duration){
     return selected.slice(0,target);
   }
 
-  groups.forEach(g=>{
-    const n=type==='Piernas'?Math.ceil(target/groups.length):Math.max(2,Math.ceil(target/groups.length));
-    selected.push(...pickForGroup(g,n,selected));
+  // Reparto equilibrado entre los grupos del entrenamiento.
+  // Ej.: Espalda/Bíceps -> 5 ejercicios = 3 espalda + 2 bíceps;
+  // 7 = 4 + 3; 9 = 5 + 4; 11 = 6 + 5.
+  const pools=groups.map(g=>({
+    group:g,
+    items:repo.filter(e=>e.group===g).sort((a,b)=>b.priority-a.priority)
+  }));
+
+  const counts=pools.map(p=>Math.floor(target/groups.length));
+  let remaining=target-counts.reduce((a,b)=>a+b,0);
+
+  // Los ejercicios disponibles determinan dónde colocar los extras.
+  // En empate se respeta el orden habitual de los grupos.
+  const order=pools
+    .map((p,i)=>({i,available:p.items.length}))
+    .sort((a,b)=>b.available-a.available||a.i-b.i);
+
+  for(const item of order){
+    if(!remaining)break;
+    if(counts[item.i]<pools[item.i].items.length){
+      counts[item.i]++;
+      remaining--;
+    }
+  }
+
+  pools.forEach((p,i)=>{
+    const picked=pickForGroup(p.group,counts[i],selected);
+    selected.push(...picked);
   });
 
-  return selected.sort((a,b)=>b.priority-a.priority).slice(0,target);
+  // Si algún grupo no tiene suficientes ejercicios, rellenamos con los demás.
+  if(selected.length<target){
+    const used=new Set(selected.map(e=>e.name));
+    const extra=repo
+      .filter(e=>groups.includes(e.group)&&!used.has(e.name))
+      .sort((a,b)=>b.priority-a.priority);
+    selected.push(...extra.slice(0,target-selected.length));
+  }
+
+  return selected.slice(0,target);
 }
 
 function getSwapCandidates(old,i){
-  return repo.filter(e=>
-    e.name!==old.name &&
-    e.group===old.group &&
-    hasAllTags(e,old) &&
-    !lastPlan.some((current,index)=>index!==i&&current.name===e.name)
-  ).sort((a,b)=>b.priority-a.priority);
+  if(!old)return [];
+  return repo
+    .filter(e=>{
+      if(e.name===old.name || e.group!==old.group)return false;
+      // El candidato no puede ser el mismo ejercicio que ya ocupa otra posición.
+      if(lastPlan.some((current,index)=>index!==i&&current.name===e.name))return false;
+      // Debe compartir al menos un tag. Los que comparten más tags aparecen primero.
+      return sharedTags(e,old).length>0;
+    })
+    .map(e=>({
+      exercise:e,
+      overlap:sharedTags(e,old).length,
+      allOldTags:(old.tags||[]).every(tag=>(e.tags||[]).includes(tag))
+    }))
+    .sort((a,b)=>b.allOldTags-a.allOldTags||b.overlap-a.overlap||b.exercise.priority-a.exercise.priority)
+    .map(x=>x.exercise);
 }
 
 function hasAlternative(i){
@@ -1180,7 +1218,11 @@ function hasAlternative(i){
 function swapExercise(i){
   const candidates=getSwapCandidates(lastPlan[i],i);
   if(!candidates.length)return;
-  lastPlan[i]=candidates[Math.floor(Math.random()*candidates.length)];
+
+  // Evita cambiar a una opción que haga desaparecer alternativas de otros
+  // ejercicios cuando todavía existe otra candidata válida para este puesto.
+  const next=candidates[Math.floor(Math.random()*candidates.length)];
+  lastPlan[i]=next;
   renderTraining();
 }
 
