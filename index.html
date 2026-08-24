@@ -923,6 +923,892 @@ li::marker{
 
 @media(max-width:760px){.edit-grid{grid-template-columns:1fr 1fr}.edit-grid .full{grid-column:1/-1}.edit-actions{flex-direction:column}}
 
+
+/* =========================================================
+   🔥 CAPA VISUAL PRO — SOLO APARIENCIA
+   No modifica contenido ni lógica.
+   ========================================================= */
+
+:root{
+  --bg:#07090d;
+  --bg2:#0b0f15;
+  --card:#11161f;
+  --card2:#151b25;
+  --card3:#1b2330;
+  --text:#f6f8fb;
+  --muted:#8994a5;
+  --muted2:#606b7b;
+  --line:rgba(255,255,255,.075);
+
+  --accent:#b8f34b;
+  --accent2:#91d72e;
+  --accent-soft:rgba(184,243,75,.09);
+  --accent-border:rgba(184,243,75,.28);
+
+  --warning:#f5cc61;
+  --danger:#ff7272;
+
+  --radius:22px;
+  --radius-small:15px;
+
+  --shadow:0 22px 60px rgba(0,0,0,.36);
+  --shadow-small:0 10px 28px rgba(0,0,0,.24);
+}
+
+/* ---------- base ---------- */
+
+html{
+  background:
+    radial-gradient(circle at 50% -10%,rgba(184,243,75,.10),transparent 28%),
+    #07090d;
+}
+
+body{
+  position:relative;
+  overflow-x:hidden;
+  background:
+    radial-gradient(circle at 8% 18%,rgba(184,243,75,.035),transparent 24%),
+    radial-gradient(circle at 92% 42%,rgba(105,120,255,.025),transparent 22%),
+    linear-gradient(180deg,#080a0e 0%,#0a0d12 42%,#080a0e 100%);
+}
+
+/* textura extremadamente sutil */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  opacity:.22;
+  background-image:
+    linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);
+  background-size:28px 28px;
+  mask-image:linear-gradient(to bottom,#000,transparent 75%);
+}
+
+/* ---------- header ---------- */
+
+header{
+  padding:
+    calc(38px + env(safe-area-inset-top))
+    18px
+    30px;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(184,243,75,.11),transparent 28%),
+    radial-gradient(circle at 95% 15%,rgba(184,243,75,.09),transparent 23%),
+    linear-gradient(180deg,#121821 0%,#0a0d12 100%);
+  border-bottom:1px solid rgba(255,255,255,.055);
+  box-shadow:0 20px 50px rgba(0,0,0,.20);
+}
+
+header::before{
+  width:240px;
+  height:240px;
+  right:-115px;
+  top:-140px;
+  background:rgba(184,243,75,.075);
+  filter:blur(35px);
+}
+
+header::after{
+  content:"";
+  position:absolute;
+  left:18px;
+  right:18px;
+  bottom:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(184,243,75,.32),transparent);
+}
+
+header h1{
+  position:relative;
+  display:inline-block;
+  margin-left:50%;
+  transform:translateX(-50%);
+  padding:0 3px;
+  font-size:28px;
+  font-weight:950;
+  letter-spacing:-1.2px;
+  text-shadow:0 0 35px rgba(184,243,75,.08);
+}
+
+header h1::after{
+  content:"";
+  position:absolute;
+  left:10%;
+  right:10%;
+  bottom:-7px;
+  height:2px;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  opacity:.7;
+}
+
+header p{
+  margin-top:14px;
+  color:#9ba5b4;
+  font-size:12px;
+  letter-spacing:.2px;
+}
+
+/* ---------- navegación ---------- */
+
+nav{
+  bottom:calc(12px + env(safe-area-inset-bottom));
+  left:12px;
+  right:12px;
+  padding:7px;
+  gap:6px;
+  background:rgba(13,17,24,.82);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:22px;
+  box-shadow:
+    0 24px 60px rgba(0,0,0,.5),
+    0 0 0 1px rgba(184,243,75,.03);
+  backdrop-filter:blur(28px) saturate(1.25);
+  -webkit-backdrop-filter:blur(28px) saturate(1.25);
+}
+
+nav button{
+  min-height:55px;
+  border-radius:17px;
+  font-size:10px;
+  letter-spacing:.2px;
+}
+
+nav button::before{
+  font-size:18px;
+  margin-bottom:4px;
+}
+
+nav button.active{
+  color:#0a0d0f;
+  background:
+    linear-gradient(180deg,#c8fb63 0%,#a8e942 100%);
+  border-color:transparent;
+  box-shadow:
+    0 7px 20px rgba(184,243,75,.18),
+    inset 0 1px 0 rgba(255,255,255,.58);
+}
+
+nav button.active::before{
+  filter:drop-shadow(0 1px 4px rgba(0,0,0,.14));
+}
+
+nav button:not(.active){
+  background:rgba(255,255,255,.018);
+}
+
+nav button:not(.active):active{
+  background:rgba(255,255,255,.05);
+}
+
+/* ---------- main / panels ---------- */
+
+main{
+  padding:12px 12px 36px;
+}
+
+.panel{
+  margin:15px 0;
+  padding:20px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.035),transparent 35%),
+    linear-gradient(180deg,rgba(255,255,255,.012),transparent 65%),
+    var(--card);
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+}
+
+.panel::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:12%;
+  right:12%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(184,243,75,.22),transparent);
+  pointer-events:none;
+}
+
+.panel::after{
+  opacity:.55;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(184,243,75,.045),transparent 28%);
+}
+
+.panel h2{
+  margin-bottom:19px;
+  font-size:21px;
+  letter-spacing:-.5px;
+}
+
+/* ---------- form ---------- */
+
+.grid{
+  gap:10px;
+}
+
+.field{
+  padding:2px;
+}
+
+.field label{
+  margin:0 0 7px 3px;
+  color:#7f8a9b;
+  font-size:9px;
+  letter-spacing:1px;
+}
+
+.field select,
+.field input{
+  min-height:54px;
+  padding:14px 15px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.018),transparent),
+    #0b1016;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:15px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.018),
+    0 3px 10px rgba(0,0,0,.12);
+}
+
+.field select:hover,
+.field input:hover{
+  border-color:rgba(255,255,255,.12);
+}
+
+.field select:focus,
+.field input:focus{
+  border-color:rgba(184,243,75,.48);
+  box-shadow:
+    0 0 0 4px rgba(184,243,75,.06),
+    0 8px 25px rgba(0,0,0,.16);
+}
+
+/* ---------- buttons ---------- */
+
+.actions{
+  gap:9px;
+  margin-top:16px;
+}
+
+.primary,
+.secondary{
+  position:relative;
+  overflow:hidden;
+}
+
+.primary{
+  min-height:53px;
+  padding:13px 20px;
+  border-radius:15px;
+  background:linear-gradient(180deg,#c6fb61 0%,#a9e843 100%);
+  box-shadow:
+    0 10px 28px rgba(184,243,75,.15),
+    inset 0 1px 0 rgba(255,255,255,.62);
+  letter-spacing:-.1px;
+}
+
+.primary::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-45%;
+  width:38%;
+  height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+  transform:skewX(-18deg);
+  transition:left .55s ease;
+}
+
+.primary:hover::before{
+  left:115%;
+}
+
+.secondary{
+  min-height:46px;
+  padding:10px 14px;
+  border-radius:14px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01)),
+    #151b24;
+  border:1px solid rgba(255,255,255,.08);
+  color:#e4e8ef;
+  box-shadow:0 6px 16px rgba(0,0,0,.14);
+}
+
+.secondary:hover{
+  border-color:rgba(184,243,75,.18);
+  background:
+    linear-gradient(180deg,rgba(184,243,75,.045),rgba(255,255,255,.01)),
+    #151b24;
+}
+
+.danger{
+  background:rgba(255,107,107,.06);
+  border-color:rgba(255,107,107,.20);
+}
+
+/* ---------- aviso ---------- */
+
+.notice{
+  margin-top:15px;
+  padding:14px 15px;
+  color:#d8cd9c;
+  background:
+    linear-gradient(135deg,rgba(245,204,97,.08),transparent 45%),
+    rgba(245,204,97,.035);
+  border:1px solid rgba(245,204,97,.16);
+  border-radius:15px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.018);
+}
+
+/* ---------- resumen ---------- */
+
+.summary{
+  gap:7px;
+  margin:6px 2px 18px;
+}
+
+.pill{
+  min-height:29px;
+  padding:6px 10px;
+  color:#bfff61;
+  background:rgba(184,243,75,.07);
+  border:1px solid rgba(184,243,75,.20);
+  border-radius:999px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* ---------- ejercicios ---------- */
+
+.exercise{
+  margin:12px 0;
+  padding:18px 17px 17px 19px;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.028),transparent 32%),
+    linear-gradient(180deg,rgba(255,255,255,.014),transparent 75%),
+    var(--card2);
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:20px;
+  box-shadow:
+    0 14px 35px rgba(0,0,0,.22),
+    inset 0 1px 0 rgba(255,255,255,.02);
+}
+
+.exercise::before{
+  width:4px;
+  left:0;
+  background:linear-gradient(180deg,#c5fb5f,#7dbf25);
+  opacity:1;
+  box-shadow:0 0 16px rgba(184,243,75,.16);
+}
+
+.exercise:hover{
+  border-color:rgba(184,243,75,.16);
+}
+
+.ex-head{
+  gap:14px;
+}
+
+.ex-name{
+  font-size:17px;
+  letter-spacing:-.35px;
+}
+
+.ex-meta{
+  color:#7d8898;
+  font-size:10px;
+  letter-spacing:.15px;
+}
+
+.sets{
+  margin:15px 0 7px;
+  color:#c0fb60;
+  font-size:18px;
+  line-height:1.35;
+  text-shadow:0 0 18px rgba(184,243,75,.07);
+}
+
+.rest{
+  color:#7d8896;
+}
+
+.cue,
+.hint{
+  color:#a8b1be;
+}
+
+/* ---------- repositorio ---------- */
+
+.repo-panel{
+  overflow:visible;
+}
+
+.repo-note{
+  color:#778294;
+}
+
+.repo-search input{
+  min-height:50px;
+  padding-left:43px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.022),transparent),
+    #0b1016;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:15px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.018);
+}
+
+.repo-search::before{
+  left:14px;
+  top:11px;
+  color:#7c8796;
+}
+
+.repo-filters{
+  gap:8px;
+  margin-top:10px;
+}
+
+.repo-filters select,
+.filter-select{
+  min-height:44px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),transparent),
+    #0b1016;
+  border-color:rgba(255,255,255,.08);
+  border-radius:12px;
+}
+
+.filter-select{
+  padding:9px 12px;
+}
+
+.tag-filter-menu{
+  top:calc(100% + 8px);
+  padding:7px;
+  max-height:300px;
+  background:rgba(17,22,31,.98);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;
+  box-shadow:
+    0 20px 45px rgba(0,0,0,.55),
+    0 0 0 1px rgba(184,243,75,.025);
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+}
+
+.tag-filter-option,
+.tag-filter-all{
+  border-radius:10px;
+}
+
+.tag-filter-option:hover,
+.tag-filter-all:hover{
+  background:rgba(255,255,255,.045);
+}
+
+.repo-count-row{
+  margin-top:9px;
+}
+
+.repo-count{
+  color:#667283;
+  font-size:10px;
+}
+
+.filter-reset{
+  font-size:10px;
+  letter-spacing:.2px;
+}
+
+.repo-list{
+  gap:11px;
+}
+
+.repo-card{
+  position:relative;
+  overflow:hidden;
+  padding:16px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.032),transparent 38%),
+    var(--card2);
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:19px;
+  box-shadow:var(--shadow-small);
+}
+
+.repo-card::before{
+  content:"";
+  position:absolute;
+  inset:0 0 auto;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(184,243,75,.18),transparent);
+}
+
+.repo-card-title-row{
+  gap:10px;
+}
+
+.repo-card-name{
+  font-size:15px;
+  letter-spacing:-.2px;
+}
+
+.repo-card-meta{
+  color:#768294;
+}
+
+.repo-card-actions{
+  gap:7px;
+}
+
+.icon-btn{
+  width:38px;
+  height:38px;
+  border-radius:11px;
+  background:#0c1118;
+  border-color:rgba(255,255,255,.08);
+  box-shadow:0 5px 14px rgba(0,0,0,.17);
+}
+
+.icon-btn:hover{
+  border-color:rgba(184,243,75,.22);
+  color:#c8fa73;
+}
+
+.icon-btn.save{
+  background:linear-gradient(180deg,#c5fb5f,#a7e743);
+  box-shadow:0 7px 18px rgba(184,243,75,.13);
+}
+
+.repo-info-row{
+  gap:6px;
+  margin-top:12px;
+}
+
+.repo-tag{
+  padding:6px 9px;
+  background:rgba(184,243,75,.055);
+  border-color:rgba(184,243,75,.16);
+}
+
+.repo-stat{
+  background:#0d1219;
+  border-color:rgba(255,255,255,.065);
+  color:#7d8898;
+}
+
+.priority-badge{
+  width:31px;
+  height:31px;
+  box-shadow:0 4px 13px rgba(0,0,0,.16);
+}
+
+.repo-edit{
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+
+.edit-grid{
+  gap:10px;
+}
+
+.edit-field label{
+  color:#717c8d;
+}
+
+.edit-field input,
+.edit-field select{
+  min-height:44px;
+  background:#0b1016;
+  border-color:rgba(255,255,255,.08);
+  border-radius:11px;
+}
+
+.tag-editor{
+  gap:7px;
+}
+
+.tag-option{
+  padding:8px 10px;
+  background:#0b1016;
+  border-color:rgba(255,255,255,.075);
+}
+
+.tag-option.selected{
+  background:rgba(184,243,75,.08);
+  border-color:rgba(184,243,75,.24);
+  box-shadow:0 4px 12px rgba(184,243,75,.05);
+}
+
+.priority-help{
+  color:#606b7b;
+}
+
+.edit-actions{
+  gap:8px;
+}
+
+.repo-empty{
+  padding:30px 16px;
+  border-color:rgba(255,255,255,.09);
+  background:#0b1016;
+}
+
+/* ---------- criterios ---------- */
+
+#info .panel{
+  background:
+    linear-gradient(145deg,rgba(184,243,75,.032),transparent 28%),
+    var(--card);
+}
+
+#info ul{
+  padding-left:19px;
+}
+
+#info li{
+  position:relative;
+  margin-bottom:12px;
+  padding-left:2px;
+  color:#b9c1cd;
+  font-size:12px;
+  line-height:1.72;
+}
+
+#info li::marker{
+  color:var(--accent);
+}
+
+/* ---------- scrollbars ---------- */
+
+*{
+  scrollbar-width:thin;
+  scrollbar-color:rgba(184,243,75,.22) transparent;
+}
+
+*::-webkit-scrollbar{
+  width:7px;
+  height:7px;
+}
+
+*::-webkit-scrollbar-track{
+  background:transparent;
+}
+
+*::-webkit-scrollbar-thumb{
+  background:rgba(184,243,75,.20);
+  border-radius:999px;
+}
+
+/* ---------- accesibilidad / feedback táctil ---------- */
+
+button,
+select,
+input{
+  -webkit-touch-callout:none;
+}
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 3px rgba(184,243,75,.12);
+}
+
+/* ---------- móvil premium ---------- */
+
+@media(max-width:760px){
+
+  header{
+    padding:
+      calc(31px + env(safe-area-inset-top))
+      14px
+      25px;
+  }
+
+  header h1{
+    font-size:24px;
+  }
+
+  header p{
+    margin-top:13px;
+    font-size:11px;
+  }
+
+  main{
+    padding:8px 8px 34px;
+  }
+
+  .panel{
+    padding:17px;
+    margin:12px 0;
+    border-radius:21px;
+  }
+
+  .panel h2{
+    font-size:20px;
+    margin-bottom:17px;
+  }
+
+  .field select,
+  .field input{
+    min-height:53px;
+    border-radius:15px;
+  }
+
+  .actions{
+    margin-top:14px;
+  }
+
+  .actions .primary,
+  .actions .secondary,
+  .actions label.secondary{
+    width:100%;
+  }
+
+  .primary{
+    min-height:54px;
+  }
+
+  .secondary{
+    min-height:47px;
+  }
+
+  .exercise{
+    padding:17px 15px 16px 17px;
+    border-radius:19px;
+  }
+
+  .sets{
+    font-size:17px;
+  }
+
+  .repo-card{
+    padding:15px;
+    border-radius:18px;
+  }
+
+  .repo-filters{
+    grid-template-columns:1fr !important;
+    gap:7px;
+  }
+
+  .repo-filters select,
+  .filter-select{
+    min-height:46px;
+    font-size:12px;
+  }
+
+  .tag-filter-menu{
+    min-width:0;
+    left:0;
+    right:0;
+  }
+
+  .repo-count-row{
+    align-items:flex-end;
+  }
+
+  #info li{
+    font-size:12px;
+    line-height:1.68;
+  }
+
+  nav{
+    left:9px;
+    right:9px;
+    bottom:calc(9px + env(safe-area-inset-bottom));
+  }
+
+  nav button{
+    min-height:54px;
+  }
+}
+
+/* ---------- móviles muy pequeños ---------- */
+
+@media(max-width:420px){
+
+  header{
+    padding:
+      calc(28px + env(safe-area-inset-top))
+      12px
+      23px;
+  }
+
+  header h1{
+    font-size:22px;
+  }
+
+  main{
+    padding-left:6px;
+    padding-right:6px;
+  }
+
+  .panel{
+    padding:15px;
+    border-radius:20px;
+  }
+
+  .panel h2{
+    font-size:19px;
+  }
+
+  .exercise{
+    padding-left:16px;
+  }
+
+  .repo-card{
+    padding:14px;
+  }
+
+  nav{
+    padding:6px;
+    border-radius:20px;
+  }
+
+  nav button{
+    min-height:52px;
+    font-size:9px;
+  }
+}
+
+/* ---------- escritorio: también premium, sin perder lógica ---------- */
+
+@media(min-width:761px){
+
+  body{
+    padding-bottom:30px;
+  }
+
+  header{
+    padding-bottom:34px;
+  }
+
+  main{
+    padding-top:14px;
+  }
+
+  .panel{
+    border-radius:25px;
+  }
+
+  nav{
+    box-shadow:
+      0 16px 40px rgba(0,0,0,.30),
+      inset 0 1px 0 rgba(255,255,255,.025);
+  }
+}
+
 </style>
 </head>
 
@@ -947,7 +1833,7 @@ li::marker{
 
   <div class="panel">
 
-    <h2>Generar entrenamiento</h2>
+    <h2>Planificador de entrenamiento</h2>
 
     <div class="grid">
 
@@ -1123,7 +2009,7 @@ const initialRepo = [{"name": "Prensa de piernas", "group": "Piernas", "type": "
 {"name": "Remo sentado en polea", "group": "Espalda", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": "D", "tags": ["Espalda media", "Dorsal", "Bíceps"], "cue": "Mantén el tronco estable y lleva los codos atrás sin convertirlo en un balanceo."},
 {"name": "Remo con pecho apoyado", "group": "Espalda", "type": "Compuesto", "load": "?", "unit": "kg", "inc": 5, "priority": "B", "tags": ["Espalda media", "Dorsal", "Bíceps"], "cue": "Pecho apoyado y hombros estables; tira con los codos y evita encogerlos hacia las orejas."},
 {"name": "Curl martillo", "group": "Bíceps", "type": "Aislamiento", "load": 16, "unit": "kg/mancuerna", "inc": 1, "priority": "A", "tags": ["Bíceps", "Braquial"], "cue": "Muñeca neutra y codos junto al cuerpo; evita adelantar el hombro al subir."},
-{"name": "Curl martillo en polea baja", "group": "Bíceps", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 2.5, "priority": "B", "tags": ["Bíceps", "Braquial"], "cue": "Mantén el codo estable y la muñeca neutra durante todo el recorrido."},
+{"name": "Curl martillo en polea baja", "group": "Bíceps", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 2.5, "priority": "C", "tags": ["Bíceps", "Braquial"], "cue": "Mantén el codo estable y la muñeca neutra durante todo el recorrido."},
 {"name": "Curl concentrado", "group": "Bíceps", "type": "Aislamiento", "load": 14, "unit": "kg/mancuerna", "inc": 1, "priority": "A", "tags": ["Bíceps"], "cue": "Apoya el brazo en el muslo y evita que el hombro avance al completar la flexión."},
 {"name": "Curl barra EZ", "group": "Bíceps", "type": "Aislamiento", "load": 20, "unit": "kg + barra", "inc": 2.5, "priority": "B", "tags": ["Bíceps"], "cue": "Codos bajo el hombro y torso quieto; sube sin convertir el movimiento en un balanceo."},
 {"name": "Curl predicador", "group": "Bíceps", "type": "Aislamiento", "load": "?", "unit": "kg", "inc": 2.5, "priority": "C", "tags": ["Bíceps"], "cue": "Mantén el brazo apoyado y no rebotes al llegar a la extensión."},
@@ -1918,7 +2804,7 @@ async function resetRepo(){
 
 /* Mantiene el manifest embebido que ya utilizabas. */
 const manifest={
-  name:"Gimnasio — Planificador de hipertrofia",
+  name:"Gimnasio — Planificador",
   short_name:"Gimnasio",
   start_url:".",
   display:"standalone",
