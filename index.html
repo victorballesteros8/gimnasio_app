@@ -2616,12 +2616,7 @@ async function generate(){
 
   renderTraining('loading');
 
-  await getAIComment(
-    type,
-    duration,
-    intensity,
-    lastPlan
-  );
+  await prepareAIAnalysis(type,duration,intensity,plan);
 }
 
 /* =========================================================
@@ -2630,12 +2625,50 @@ async function generate(){
 
 const GEMINI_API_KEY='PEGA_AQUI_TU_API_KEY';
 
-async function getAIComment(type,duration,intensity,plan){
+let lastAIAnalysis=null;
+
+function prepareAIAnalysis(type,duration,intensity,plan){
+  lastAIAnalysis={
+    type,
+    duration,
+    intensity,
+    plan
+  };
+
+  renderTraining();
+}
+
+async function getAIComment(){
+
+  if(!lastAIAnalysis)return;
+
+  const {type,duration,intensity,plan}=lastAIAnalysis;
+
+  const button=document.getElementById('aiCommentButton');
+  const result=document.getElementById('aiCommentResult');
+
+  if(button){
+    button.disabled=true;
+    button.innerHTML='⏳ Analizando...';
+  }
+
+  if(result){
+    result.innerHTML='';
+    result.classList.remove('visible');
+  }
 
   if(!GEMINI_API_KEY || GEMINI_API_KEY==='PEGA_AQUI_TU_API_KEY'){
-    renderTraining({
-      text:'Configura primero tu API key de Gemini en el código de la aplicación.'
-    });
+
+    if(result){
+      result.innerHTML='Configura primero tu API key de Gemini en el código de la aplicación.';
+      result.classList.add('visible');
+    }
+
+    if(button){
+      button.disabled=false;
+      button.innerHTML='✨ Analizar con IA';
+    }
+
     return;
   }
 
@@ -2718,9 +2751,10 @@ Responde únicamente con el comentario final para el usuario.
         errorText
       );
 
-      renderTraining({
-        text:`Error Gemini ${response.status}: ${errorText}`
-      });
+      if(result){
+        result.innerHTML=`Error Gemini ${response.status}: ${esc(errorText)}`;
+        result.classList.add('visible');
+      }
 
       return;
     }
@@ -2733,17 +2767,27 @@ Responde únicamente con el comentario final para el usuario.
       data.candidates?.[0]?.content?.parts?.[0]?.text ||
       'No se ha recibido ningún comentario de la IA.';
 
-    renderTraining({
-      text:aiText.trim()
-    });
+    if(result){
+      result.innerHTML=esc(aiText.trim());
+      result.classList.add('visible');
+    }
 
   }catch(error){
 
     console.error('Error conectando con Gemini:',error);
 
-    renderTraining({
-      text:'No se ha podido conectar con Gemini. Comprueba tu conexión a Internet.'
-    });
+    if(result){
+      result.innerHTML='No se ha podido conectar con Gemini. Comprueba tu conexión a Internet.';
+      result.classList.add('visible');
+    }
+
+  }finally{
+
+    if(button){
+      button.disabled=false;
+      button.innerHTML='✨ Analizar de nuevo';
+    }
+
   }
 }
 
