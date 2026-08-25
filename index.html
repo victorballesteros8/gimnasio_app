@@ -2625,50 +2625,12 @@ async function generate(){
 
 const GEMINI_API_KEY='PEGA_AQUI_TU_API_KEY';
 
-let lastAIAnalysis=null;
-
-function prepareAIAnalysis(type,duration,intensity,plan){
-  lastAIAnalysis={
-    type,
-    duration,
-    intensity,
-    plan
-  };
-
-  renderTraining();
-}
-
-async function getAIComment(){
-
-  if(!lastAIAnalysis)return;
-
-  const {type,duration,intensity,plan}=lastAIAnalysis;
-
-  const button=document.getElementById('aiCommentButton');
-  const result=document.getElementById('aiCommentResult');
-
-  if(button){
-    button.disabled=true;
-    button.innerHTML='⏳ Analizando...';
-  }
-
-  if(result){
-    result.innerHTML='';
-    result.classList.remove('visible');
-  }
+async function getAIComment(type,duration,intensity,plan){
 
   if(!GEMINI_API_KEY || GEMINI_API_KEY==='PEGA_AQUI_TU_API_KEY'){
-
-    if(result){
-      result.innerHTML='Configura primero tu API key de Gemini en el código de la aplicación.';
-      result.classList.add('visible');
-    }
-
-    if(button){
-      button.disabled=false;
-      button.innerHTML='✨ Analizar con IA';
-    }
-
+    renderTraining({
+      text:'Configura primero tu API key de Gemini en el código de la aplicación.'
+    });
     return;
   }
 
@@ -2751,10 +2713,9 @@ Responde únicamente con el comentario final para el usuario.
         errorText
       );
 
-      if(result){
-        result.innerHTML=`Error Gemini ${response.status}: ${esc(errorText)}`;
-        result.classList.add('visible');
-      }
+      renderTraining({
+        text:`Error Gemini ${response.status}: ${errorText}`
+      });
 
       return;
     }
@@ -2767,27 +2728,17 @@ Responde únicamente con el comentario final para el usuario.
       data.candidates?.[0]?.content?.parts?.[0]?.text ||
       'No se ha recibido ningún comentario de la IA.';
 
-    if(result){
-      result.innerHTML=esc(aiText.trim());
-      result.classList.add('visible');
-    }
+    renderTraining({
+      text:aiText.trim()
+    });
 
   }catch(error){
 
     console.error('Error conectando con Gemini:',error);
 
-    if(result){
-      result.innerHTML='No se ha podido conectar con Gemini. Comprueba tu conexión a Internet.';
-      result.classList.add('visible');
-    }
-
-  }finally{
-
-    if(button){
-      button.disabled=false;
-      button.innerHTML='✨ Analizar de nuevo';
-    }
-
+    renderTraining({
+      text:'No se ha podido conectar con Gemini. Comprueba tu conexión a Internet.'
+    });
   }
 }
 
