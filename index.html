@@ -2702,18 +2702,18 @@ Responde únicamente con el comentario final para el usuario.
       }
     );
 
-    if(!response.ok){
-
-      const errorText=await response.text();
-
-      console.error('Error Gemini:',errorText);
-
-      renderTraining({
-        text:'No se ha podido analizar el entrenamiento con la IA.'
-      });
-
-      return;
-    }
+  if(!response.ok){
+  
+    const errorText=await response.text();
+  
+    console.error('Error Gemini:', response.status, errorText);
+  
+    renderTraining({
+      text:`Error Gemini ${response.status}: ${errorText}`
+    });
+  
+    return;
+  }
 
     const data=await response.json();
 
