@@ -1808,68 +1808,8 @@ input:focus-visible{
       inset 0 1px 0 rgba(255,255,255,.025);
   }
 }
-/* =========================================================
-   🤖 COMENTARIO DE LA IA
-   ========================================================= */
 
-.ai-comment{
-  position:relative;
-  margin-top:16px;
-  padding:16px 16px 15px 18px;
-
-  background:
-    linear-gradient(145deg,rgba(184,243,75,.045),transparent 45%),
-    var(--card2);
-
-  border:1px solid rgba(184,243,75,.16);
-  border-radius:18px;
-
-  box-shadow:
-    0 10px 28px rgba(0,0,0,.20),
-    inset 0 1px 0 rgba(255,255,255,.025);
-}
-
-.ai-comment::before{
-  content:"";
-  position:absolute;
-  left:0;
-  top:0;
-  bottom:0;
-  width:4px;
-
-  background:linear-gradient(180deg,#c5fb5f,#7dbf25);
-  border-radius:4px 0 0 4px;
-}
-
-.ai-comment-title{
-  display:flex;
-  align-items:center;
-  gap:8px;
-
-  color:var(--accent);
-  font-size:13px;
-  font-weight:900;
-  letter-spacing:-.1px;
-}
-
-.ai-comment-text{
-  margin-top:8px;
-
-  color:#b9c2ce;
-  font-size:12px;
-  line-height:1.65;
-}
-
-.ai-loading{
-  color:var(--muted);
-}
-
-.ai-error{
-  color:#ff9b9b;
-}
-  
 </style>
-  
 </head>
 
 <body>
@@ -2547,199 +2487,22 @@ function exerciseHtml(e,i,intensity){
   </div>`;
 }
 
-function renderTraining(aiState='loading'){
+function renderTraining(){
   const type=document.getElementById('type').value;
   const duration=Number(document.getElementById('duration').value);
   const intensity=document.getElementById('intensity').value;
-
-  let aiHtml='';
-
-  if(aiState==='loading'){
-    aiHtml=`
-      <div class="ai-comment">
-        <div class="ai-comment-title">🤖 Comentario de la IA</div>
-        <div class="ai-comment-text ai-loading">
-          Analizando el entrenamiento...
-        </div>
-      </div>
-    `;
-  }
-
-  if(aiState==='error'){
-    aiHtml=`
-      <div class="ai-comment">
-        <div class="ai-comment-title">🤖 Comentario de la IA</div>
-        <div class="ai-comment-text ai-error">
-          No se ha podido obtener el comentario de la IA.
-        </div>
-      </div>
-    `;
-  }
-
-  if(aiState && aiState.text){
-    aiHtml=`
-      <div class="ai-comment">
-        <div class="ai-comment-title">🤖 Comentario de la IA</div>
-        <div class="ai-comment-text">
-          ${esc(aiState.text).replaceAll('\n','<br>')}
-        </div>
-      </div>
-    `;
-  }
-
-  document.getElementById('output').innerHTML=`
-    <div class="panel">
-
-      <div class="summary">
-        <span class="pill">${esc(type)}</span>
-        <span class="pill">${duration} min</span>
-        <span class="pill">${esc(intensity)}</span>
-      </div>
-
-      <h2>Entrenamiento</h2>
-
-      ${lastPlan.map((e,i)=>exerciseHtml(e,i,intensity)).join('')}
-
-      ${aiHtml}
-
-    </div>
-  `;
+  document.getElementById('output').innerHTML=`<div class="panel">
+    <div class="summary"><span class="pill">${esc(type)}</span><span class="pill">${duration} min</span><span class="pill">${esc(intensity)}</span></div>
+    <h2>Entrenamiento</h2>
+    ${lastPlan.map((e,i)=>exerciseHtml(e,i,intensity)).join('')}
+  </div>`;
 }
 
-async function generate(){
-
+function generate(){
   const type=document.getElementById('type').value;
   const duration=Number(document.getElementById('duration').value);
-  const intensity=document.getElementById('intensity').value;
-
   lastPlan=chooseExercises(type,duration);
-
-  renderTraining('loading');
-
-  await prepareAIAnalysis(type,duration,intensity,plan);
-}
-
-/* =========================================================
-   🤖 GEMINI — COMENTARIO DEL ENTRENAMIENTO
-   ========================================================= */
-
-const GEMINI_API_KEY='PEGA_AQUI_TU_API_KEY';
-
-async function getAIComment(type,duration,intensity,plan){
-
-  if(!GEMINI_API_KEY || GEMINI_API_KEY==='PEGA_AQUI_TU_API_KEY'){
-    renderTraining({
-      text:'Configura primero tu API key de Gemini en el código de la aplicación.'
-    });
-    return;
-  }
-
-  const exercises=plan.map((e,i)=>{
-
-    const programmed=setPlanFor(e,intensity);
-
-    return [
-      `${i+1}. ${e.name}`,
-      `Grupo: ${e.group}`,
-      `Tipo: ${e.type}`,
-      `Músculos: ${(e.tags||[]).join(', ')}`,
-      `Trabajo: ${programmed.text}`
-    ].join(' | ');
-
-  }).join('\n');
-
-  const prompt=`
-Eres un entrenador especializado en hipertrofia y programación del entrenamiento.
-
-Analiza el siguiente entrenamiento.
-
-TIPO: ${type}
-DURACIÓN DISPONIBLE: ${duration} minutos
-INTENSIDAD: ${intensity}
-
-EJERCICIOS:
-${exercises}
-
-Responde en 2 o 3 frases como máximo.
-
-Debes valorar:
-1. Si el entrenamiento es suficientemente completo para el tiempo disponible.
-2. Si existe alguna carencia muscular o de selección de ejercicios importante.
-3. Si añadirías algún ejercicio, cuál sería y en qué posición.
-4. Si el orden de los ejercicios es razonable.
-
-No rehagas la rutina completa.
-No describas cada ejercicio individualmente.
-No inventes ejercicios innecesarios.
-No analices si da suficiente tiempo a realizar los ejercicios.
-Sé práctico y directo.
-
-Responde únicamente con el comentario final para el usuario.
-  `.trim();
-
-  try{
-
-    const response=await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent',
-      {
-        method:'POST',
-
-        headers:{
-          'Content-Type':'application/json',
-          'x-goog-api-key':GEMINI_API_KEY
-        },
-
-        body:JSON.stringify({
-          contents:[
-            {
-              parts:[
-                {
-                  text:prompt
-                }
-              ]
-            }
-          ]
-        })
-      }
-    );
-
-    if(!response.ok){
-
-      const errorText=await response.text();
-
-      console.error(
-        'Error Gemini:',
-        response.status,
-        errorText
-      );
-
-      renderTraining({
-        text:`Error Gemini ${response.status}: ${errorText}`
-      });
-
-      return;
-    }
-
-    const data=await response.json();
-
-    console.log('Respuesta Gemini:',data);
-
-    const aiText=
-      data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      'No se ha recibido ningún comentario de la IA.';
-
-    renderTraining({
-      text:aiText.trim()
-    });
-
-  }catch(error){
-
-    console.error('Error conectando con Gemini:',error);
-
-    renderTraining({
-      text:'No se ha podido conectar con Gemini. Comprueba tu conexión a Internet.'
-    });
-  }
+  renderTraining();
 }
 
 function renderLast(){renderTraining();}
@@ -2747,6 +2510,8 @@ function renderLast(){renderTraining();}
 function esc(s){
   return String(s??'').replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;');
 }
+
+function renderTags(tags){return (tags||[]).map(t=>`<span class="repo-tag">${esc(t)}</span>`).join('');}
 
 function renderTags(tags){return (tags||[]).map(t=>`<span class="repo-tag">${esc(t)}</span>`).join('');}
 
